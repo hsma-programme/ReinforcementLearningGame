@@ -6,6 +6,7 @@ var colnames = ["A", "B", "C", "D", "E", "F"]
 
 onready var label = $TileSelectLabel
 onready var select_tilemap = $"../SelectTilemap"
+onready var labelSeed = $SeedLabel
 
 #func update_selected_tile(tile_coords):
 #	pass
@@ -17,6 +18,7 @@ onready var select_tilemap = $"../SelectTilemap"
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	label.text = "No Diggable Tile Selected"
+	labelSeed.text = "Seed: " + str(Globals.random_seed_selected)
 
 func _on_SelectTilemap_current_tile_signal(tile_coords):
 	if  tile_coords == Vector2.ZERO:

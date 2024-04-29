@@ -62,6 +62,7 @@ margin_right = 233.0
 margin_bottom = 78.0
 custom_fonts/font = SubResource( 2 )
 align = 1
+max_length = 6
 placeholder_text = "Enter a Random Seed"
 
 [node name="ManualPlayButton" type="ToolButton" parent="."]
@@ -91,4 +92,5 @@ rect_pivot_offset = Vector2( 61, 16 )
 custom_fonts/font = SubResource( 3 )
 text = "AI Play 2"
 
+[connection signal="text_changed" from="LineEdit" to="." method="_on_LineEdit_text_changed"]
 [connection signal="pressed" from="ManualPlayButton" to="." method="_on_ManualPlayButton_pressed"]
