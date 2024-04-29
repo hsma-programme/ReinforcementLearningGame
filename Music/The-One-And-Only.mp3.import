@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/The-One-And-Only.mp3-364338816d130b08153be6aff5cb1f80.mp3str"
+
+[deps]
+
+source_file="res://Music/The-One-And-Only.mp3"
+dest_files=[ "res://.import/The-One-And-Only.mp3-364338816d130b08153be6aff5cb1f80.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
