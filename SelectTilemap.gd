@@ -4,6 +4,7 @@ var GridXStart = 2
 var GridYStart = 2
 var GridSizeX = 5
 var GridSizeY = 5
+
 var TileRangeDic = {}
 
 signal current_tile_signal(current_tile)

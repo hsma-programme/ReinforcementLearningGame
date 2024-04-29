@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://GrassTilemap.gd" type="Script" id=1]
 [ext_resource path="res://SelectTilemap.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Fonts/8-bit-operator/8bitOperatorPlusSC-Bold.ttf" type="DynamicFontData" id=6]
 [ext_resource path="res://LabelControl.gd" type="Script" id=7]
 [ext_resource path="res://Fonts/8-bit-operator/8bitOperatorPlusSC-Regular.ttf" type="DynamicFontData" id=8]
+[ext_resource path="res://World.gd" type="Script" id=9]
 
 [sub_resource type="TileSet" id=1]
 0/name = "tiles.png 0"
@@ -62,6 +63,7 @@ font_data = ExtResource( 6 )
 font_data = ExtResource( 8 )
 
 [node name="World" type="Node2D"]
+script = ExtResource( 9 )
 
 [node name="WaterBackground" type="Sprite" parent="."]
 position = Vector2( 147.5, 166.5 )
