@@ -78,8 +78,8 @@
 [node name="World" type="Node2D"]
 
 [node name="WaterBackground" type="Sprite" parent="."]
-position = Vector2( 147.5, 146 )
-scale = Vector2( 9.21875, 9.125 )
+position = Vector2( 147.5, 166.5 )
+scale = Vector2( 9.21875, 10.4063 )
 texture = ExtResource( 4 )
 
 [node name="GrassTilemap" type="TileMap" parent="."]

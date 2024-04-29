@@ -18,14 +18,17 @@ func _ready():
 	
 func _process(delta):
 	var tile = world_to_map(get_global_mouse_position())
-	print(tile)
+	#print(tile)
 	
-	# First turn off the TileSelect for all 
+	# First turn off the TileSelect tile layer for all 
 	for x in range(GridXStart, GridXStart + GridSizeX, 1):
 		for y in range(GridYStart, GridYStart + GridSizeY, 1):
 			set_cell(x, y, 0)
 	
-	#for x in range(GridXStart, GridXStart + GridSizeX, 1):
-	#	for y in range(GridYStart, GridYStart + GridSizeY, 1):
+	# Now check whether current tile is in the dict we 
+	# set up at the beginning (so we don't set it for any old 
+	# tile on the map
+	# If it is in the range of diggable tiles, then set the
+	# TileSelect outline to visible 
 	if TileRangeDic.has(str(tile)):
 		set_cell(tile[0], tile[1], 1)
