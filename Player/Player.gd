@@ -29,6 +29,12 @@ func _input(event):
 			print(world_array.get(str(tile)))
 			world_array.get(str(tile))['Times_Dug'] += 1
 			
+			# At the moment the sampling here doesn't use a random
+			# number generator with a seed set - I'm not sure how to pass
+			# in a rng from elsewhere, but can't set it up within the 
+			# input (with seed set) else we just get the same answer each time
+			# Is it worth seeding with the turn number for reproducibility?
+			# Or seed * turn number for some variation across seeds, at least?
 			rand_float = randf()
 			print(rand_float)
 			print(world_array.get(str(tile))['Prob'])
