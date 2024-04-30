@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://GrassTilemap.gd" type="Script" id=1]
 [ext_resource path="res://SelectTilemap.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://LabelControl.gd" type="Script" id=7]
 [ext_resource path="res://Fonts/8-bit-operator/8bitOperatorPlusSC-Regular.ttf" type="DynamicFontData" id=8]
 [ext_resource path="res://World.gd" type="Script" id=9]
+[ext_resource path="res://Player/Player.tscn" type="PackedScene" id=10]
 
 [sub_resource type="TileSet" id=1]
 0/name = "tiles.png 0"
@@ -102,5 +103,10 @@ custom_fonts/font = SubResource( 3 )
 align = 1
 valign = 1
 
+[node name="Player" parent="." instance=ExtResource( 10 )]
+
+[connection signal="world_prob_array_created" from="." to="Player" method="_on_World_world_prob_array_created"]
 [connection signal="current_tile_signal" from="SelectTilemap" to="LabelControl" method="_on_SelectTilemap_current_tile_signal"]
+[connection signal="current_tile_signal" from="SelectTilemap" to="Player" method="_on_SelectTilemap_current_tile_signal"]
 [connection signal="tile_in_diggable_limits" from="SelectTilemap" to="LabelControl" method="_on_SelectTilemap_tile_in_diggable_limits"]
+[connection signal="tile_in_diggable_limits" from="SelectTilemap" to="Player" method="_on_SelectTilemap_tile_in_diggable_limits"]

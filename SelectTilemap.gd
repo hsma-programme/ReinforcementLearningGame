@@ -51,3 +51,4 @@ func _process(delta):
 		set_cell(current_tile[0], current_tile[1], 1)
 	else:
 		emit_signal("tile_in_diggable_limits", false)
+
