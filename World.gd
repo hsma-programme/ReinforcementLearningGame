@@ -10,7 +10,7 @@ var world_prob_array = {}
 # Set grid colors based on observed probability
 var colors = Gradient.new()
 # and the colors need to have values from 0 to 1.0
-var colors_array = [Color(.01, 0, 0, 0.4), Color(.5, 0, 0, 0.4), Color(.9, 0, 0, 0.4)]
+var colors_array = [Color(.01, 0, 0, 0.3), Color(.5, 0, 0, 0.6), Color(.9, 0, 0, 0.8)]
 #var box_size = Vector2(1,1)
 #onready var box = get_node("ColorRect")
 
@@ -46,8 +46,8 @@ func _ready():
 		margin_left = (int(cell[1])*32)+64+2
 		margin_top = (int(cell[4])*32)+64+ 2
 		x.rect_position = Vector2(margin_left, margin_top)
-		var check = cell + str(x.margin_left) + str(x.margin_top)
-		print(check)
+		#var check = cell + str(x.margin_left) + str(x.margin_top)
+		#print(check)
 #		var x = Shape2D.new()
 		#x.set_custom_minimum_size(Vector2(32,32))
 		#print(
@@ -57,12 +57,16 @@ func _ready():
 #		print(cell + str(x.rect_position))
 		
 		#x.color = colors.interpolate(world_prob_array[cell]['Prob_Observed'])
-		x.color = colors.interpolate(randf())
+		#x.color = colors.interpolate(randf())
+		
+		# Set initial colour
+		x.color = Color(0, .5, 0, 0.4)
 		
 		print(world_prob_array[cell]['Prob_Observed'])
 		print(x.color)
 		#box.set_frame_color(box_color)
 		#x.color = Color(1,0,0,1)
+		# Add node to world
 		add_child(x)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -70,8 +74,12 @@ func _ready():
 #	pass
 
 func _on_Player_probabilities_updated(tile):
+	#print(get_tree().get_root())
+	#print(get_tree().get_root().get_node("./" + str(tile)))
+	var rect_tile = get_node("./" + str(tile))
+	rect_tile.color = colors.interpolate(clamp(world_prob_array[str(tile)]['Prob_Observed'], 0.01, 0.99))
 	#print(self.get_child(str(tile)))
-	pass
+	#pass
 	#print(self.get_children().get_node(str(tile)))
 #	for _i in self.get_children ():
 #		print(_i)
