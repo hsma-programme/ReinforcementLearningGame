@@ -15,6 +15,7 @@ var formatted_tile_label = "Z9"
 
 signal treasure_found
 signal turn_taken
+signal probabilities_updated
 
 func _on_World_world_prob_array_created(value):
 	world_array = value
@@ -54,11 +55,14 @@ func _input(event):
 				Globals.treasure_count += 1
 				emit_signal("treasure_found", Globals.treasure_count)
 				world_array.get(str(tile))['Times_Success'] += 1
-				world_array.get(str(tile))['Prob_Observed'] = (
-					world_array.get(str(tile))['Times_Success'] / 
-					world_array.get(str(tile))['Times_Dug'] )
+
 			else:
 				text_log.text = "Turn " + str(Globals.turns) + ": Didn't find treasure in tile " +  str(formatted_tile_label) + "\n" +  text_log.text
+			
+			world_array.get(str(tile))['Prob_Observed'] = (
+				world_array.get(str(tile))['Times_Success'] / 
+				world_array.get(str(tile))['Times_Dug'] )
+			emit_signal("probabilities_updated", tile)
 				
 		else:
 			print("Can't click there, mate")

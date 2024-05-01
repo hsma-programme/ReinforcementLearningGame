@@ -168,11 +168,19 @@ margin_top = -58.0
 margin_right = 198.0
 margin_bottom = 39.0
 
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+margin_left = 64.0
+margin_top = 64.0
+margin_right = 96.0
+margin_bottom = 96.0
+
 [connection signal="world_prob_array_created" from="." to="Player" method="_on_World_world_prob_array_created"]
 [connection signal="current_tile_signal" from="SelectTilemap" to="LabelControl" method="_on_SelectTilemap_current_tile_signal"]
 [connection signal="current_tile_signal" from="SelectTilemap" to="Player" method="_on_SelectTilemap_current_tile_signal"]
 [connection signal="tile_in_diggable_limits" from="SelectTilemap" to="LabelControl" method="_on_SelectTilemap_tile_in_diggable_limits"]
 [connection signal="tile_in_diggable_limits" from="SelectTilemap" to="Player" method="_on_SelectTilemap_tile_in_diggable_limits"]
 [connection signal="formatted_tile_label_signal" from="LabelControl" to="Player" method="_on_LabelControl_formatted_tile_label_signal"]
+[connection signal="probabilities_updated" from="Player" to="." method="_on_Player_probabilities_updated"]
 [connection signal="treasure_found" from="Player" to="LabelControl" method="_on_Player_treasure_found"]
 [connection signal="turn_taken" from="Player" to="TurnUI" method="_on_Player_turn_taken"]
