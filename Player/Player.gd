@@ -9,6 +9,7 @@ onready var select_tilemap = $"../SelectTilemap"
 onready var world = $".."
 
 onready var world_array = world.world_prob_array
+onready var text_log = $"../LabelControl/Log"
 
 signal treasure_found
 
@@ -28,6 +29,7 @@ func _input(event):
 			#print(world_array)
 			print(world_array.get(str(tile)))
 			world_array.get(str(tile))['Times_Dug'] += 1
+			text_log.text = "Clicked on tile " +  str(tile) + "\n" +  text_log.text
 			
 			# At the moment the sampling here doesn't use a random
 			# number generator with a seed set - I'm not sure how to pass
