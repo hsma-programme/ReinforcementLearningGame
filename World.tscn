@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://GrassTilemap.gd" type="Script" id=1]
 [ext_resource path="res://SelectTilemap.tscn" type="PackedScene" id=2]
@@ -10,6 +10,10 @@
 [ext_resource path="res://Fonts/8-bit-operator/8bitOperatorPlusSC-Regular.ttf" type="DynamicFontData" id=8]
 [ext_resource path="res://World.gd" type="Script" id=9]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=10]
+[ext_resource path="res://UI/TurnUI.tscn" type="PackedScene" id=11]
+[ext_resource path="res://UI/theme_black.tres" type="Theme" id=12]
+[ext_resource path="res://Fonts/8-bit-operator/8bitOperatorPlus-Bold.ttf" type="DynamicFontData" id=13]
+[ext_resource path="res://UI/Fantasy RPG (Toony) 32x32 Chest.png" type="Texture" id=14]
 
 [sub_resource type="TileSet" id=1]
 0/name = "tiles.png 0"
@@ -65,7 +69,25 @@ font_data = ExtResource( 8 )
 
 [sub_resource type="DynamicFont" id=4]
 size = 10
+outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 8 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+content_margin_left = 8.0
+bg_color = Color( 0.964706, 0.964706, 0.964706, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0, 0, 0, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="DynamicFont" id=6]
+size = 11
+font_data = ExtResource( 13 )
 
 [node name="World" type="Node2D"]
 script = ExtResource( 9 )
@@ -111,13 +133,44 @@ valign = 1
 margin_left = 277.0
 margin_top = 41.0
 margin_right = 434.0
-margin_bottom = 310.0
+margin_bottom = 280.0
+theme = ExtResource( 12 )
 custom_fonts/normal_font = SubResource( 4 )
+custom_styles/normal = SubResource( 5 )
+
+[node name="LogBackground" type="TextureRect" parent="LabelControl"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="TreasureLabel" type="Label" parent="LabelControl"]
+margin_left = 316.0
+margin_top = 4.0
+margin_right = 430.0
+margin_bottom = 35.0
+custom_fonts/font = SubResource( 6 )
+align = 1
+
+[node name="TextureRect" type="TextureRect" parent="LabelControl"]
+margin_left = 288.0
+margin_top = 11.0
+margin_right = 311.0
+margin_bottom = 34.0
+texture = ExtResource( 14 )
+expand = true
 
 [node name="Player" parent="." instance=ExtResource( 10 )]
+
+[node name="TurnUI" parent="." instance=ExtResource( 11 )]
+margin_left = 102.0
+margin_top = -58.0
+margin_right = 198.0
+margin_bottom = 39.0
 
 [connection signal="world_prob_array_created" from="." to="Player" method="_on_World_world_prob_array_created"]
 [connection signal="current_tile_signal" from="SelectTilemap" to="LabelControl" method="_on_SelectTilemap_current_tile_signal"]
 [connection signal="current_tile_signal" from="SelectTilemap" to="Player" method="_on_SelectTilemap_current_tile_signal"]
 [connection signal="tile_in_diggable_limits" from="SelectTilemap" to="LabelControl" method="_on_SelectTilemap_tile_in_diggable_limits"]
 [connection signal="tile_in_diggable_limits" from="SelectTilemap" to="Player" method="_on_SelectTilemap_tile_in_diggable_limits"]
+[connection signal="formatted_tile_label_signal" from="LabelControl" to="Player" method="_on_LabelControl_formatted_tile_label_signal"]
+[connection signal="treasure_found" from="Player" to="LabelControl" method="_on_Player_treasure_found"]
+[connection signal="turn_taken" from="Player" to="TurnUI" method="_on_Player_turn_taken"]

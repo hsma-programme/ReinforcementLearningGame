@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://UI/TurnUI.gd" type="Script" id=1]
+[ext_resource path="res://UI/Pixel1_Healthbar_0002_pixel1_border.png" type="Texture" id=2]
+[ext_resource path="res://UI/Pixel1_Healthbar_0001_pixel1_healthbar.png" type="Texture" id=3]
+[ext_resource path="res://Fonts/8-bit-operator/8bitOperatorPlus8-Regular.ttf" type="DynamicFontData" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 10
+font_data = ExtResource( 4 )
+
+[node name="TurnUI" type="Control"]
+margin_top = -63.0
+margin_right = 40.0
+margin_bottom = -23.0
+script = ExtResource( 1 )
+
+[node name="TurnUIBarBase" type="TextureRect" parent="."]
+margin_left = -6.0
+margin_right = 124.0
+margin_bottom = 100.0
+texture = ExtResource( 2 )
+
+[node name="TurnUIBar" type="TextureRect" parent="."]
+margin_left = -6.0
+margin_top = 12.0
+margin_right = 125.0
+margin_bottom = 105.0
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 2
+
+[node name="TurnLabel" type="Label" parent="."]
+margin_top = 79.0
+margin_right = 82.0
+margin_bottom = 93.0
+custom_fonts/font = SubResource( 1 )
+align = 1
