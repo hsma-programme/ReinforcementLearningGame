@@ -62,13 +62,15 @@
 1/z_index = 0
 
 [sub_resource type="DynamicFont" id=2]
+size = 14
 font_data = ExtResource( 6 )
 
 [sub_resource type="DynamicFont" id=3]
+size = 8
 font_data = ExtResource( 8 )
 
 [sub_resource type="DynamicFont" id=4]
-size = 10
+size = 6
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 8 )
 
@@ -130,9 +132,9 @@ align = 1
 valign = 1
 
 [node name="Log" type="RichTextLabel" parent="LabelControl"]
-margin_left = 277.0
+margin_left = 265.0
 margin_top = 41.0
-margin_right = 434.0
+margin_right = 440.0
 margin_bottom = 280.0
 theme = ExtResource( 12 )
 custom_fonts/normal_font = SubResource( 4 )

@@ -62,7 +62,7 @@ func _input(event):
 				
 		else:
 			print("Can't click there, mate")
-			text_log.text = "Invalid digging location selected - select a tile on the island"
+			text_log.text = "Invalid digging location selected - select a tile on the island" + "\n" +  text_log.text
 
 func _on_SelectTilemap_current_tile_signal(current_tile):
 	tile = Vector2(
