@@ -176,6 +176,7 @@ margin_right = 96.0
 margin_bottom = 96.0
 
 [node name="DebugButton" type="Button" parent="."]
+visible = false
 margin_left = 312.0
 margin_top = 290.0
 margin_right = 330.0
