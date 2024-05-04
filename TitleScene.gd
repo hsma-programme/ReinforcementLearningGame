@@ -5,7 +5,7 @@ func _ready():
 	Globals.turns = 0
 
 func _on_ManualPlayButton_pressed():
-	get_tree().change_scene("World.tscn")
+	get_tree().change_scene("Instructions.tscn")
 
 
 func _on_LineEdit_text_changed(new_text):

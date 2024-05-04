@@ -1,0 +1,62 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Instructions.gd" type="Script" id=1]
+[ext_resource path="res://TitleScreenTempBGBlack.jpg" type="Texture" id=2]
+[ext_resource path="res://Themes/buttons_v2.tres" type="Theme" id=3]
+
+[sub_resource type="DynamicFontData" id=1]
+font_path = "res://Fonts/8-bit-operator/8bitOperatorPlus-Bold.ttf"
+
+[sub_resource type="DynamicFont" id=2]
+size = 19
+font_data = SubResource( 1 )
+
+[sub_resource type="DynamicFontData" id=3]
+font_path = "res://Fonts/8-bit-operator/8bitOperatorPlus8-Bold.ttf"
+
+[sub_resource type="DynamicFont" id=4]
+size = 17
+font_data = SubResource( 3 )
+
+[node name="Instructions" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="TextureRect3" type="TextureRect" parent="."]
+margin_left = -1.0
+margin_top = 2.0
+margin_right = 467.0
+margin_bottom = 337.0
+rect_pivot_offset = Vector2( 24, 102 )
+texture = ExtResource( 2 )
+expand = true
+
+[node name="Button" type="Button" parent="."]
+margin_left = 159.0
+margin_top = 275.0
+margin_right = 320.0
+margin_bottom = 304.0
+theme = ExtResource( 3 )
+custom_fonts/font = SubResource( 2 )
+text = "Ready"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_left = 18.0
+margin_top = 18.0
+margin_right = 445.0
+margin_bottom = 271.0
+custom_fonts/normal_font = SubResource( 4 )
+text = "You are about to be dropped on an island.
+
+Your goal is to find as much treasure as possible. 
+
+Click on a tile to be dropped on it by the helicopter. This will be your first dig site.
+
+On each subsequent turn, you can dig in the same tile (costing 1 turn), or you can move to any other tile and dig there (costing 2 turns). 
+
+You have 200 turns.
+
+Good luck!
+
+"
+
+[connection signal="button_down" from="Button" to="." method="_on_Button_button_down"]
