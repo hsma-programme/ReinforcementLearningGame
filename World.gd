@@ -10,7 +10,7 @@ var world_prob_array = {}
 # Set grid colors based on observed probability
 var colors = Gradient.new()
 # and the colors need to have values from 0 to 1.0
-var colors_array = [Color(.01, 0, 0, 0.3), Color(.5, 0, 0, 0.6), Color(.9, 0, 0, 0.8)]
+var colors_array = [Color(0, 0, .9, 0.3), Color(.5, 0, 0, 0.6), Color(.9, 0, 0, 0.8)]
 #var box_size = Vector2(1,1)
 #onready var box = get_node("ColorRect")
 
@@ -60,7 +60,7 @@ func _ready():
 		#x.color = colors.interpolate(randf())
 		
 		# Set initial colour
-		x.color = Color(0, .5, 0, 0.4)
+		x.color = Color(0, .5, 0, 0.25)
 		
 		print(world_prob_array[cell]['Prob_Observed'])
 		print(x.color)

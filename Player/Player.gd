@@ -13,6 +13,8 @@ onready var text_log = $"../LabelControl/Log"
 
 var formatted_tile_label = "Z9"
 
+var previous_tile = Vector2.ZERO
+
 signal treasure_found
 signal turn_taken
 signal probabilities_updated
@@ -35,11 +37,24 @@ func _input(event):
 		if allow_click == true:
 			print("Clicked " + str(tile))
 			#print(world_array)
-			print(world_array.get(str(tile)))
-			world_array.get(str(tile))['Times_Dug'] += 1
-			Globals.turns += 1
-			emit_signal("turn_taken", Globals.turns)
+			#print(world_array.get(str(tile)))
+
+			if Globals.turns == 0:
+				text_log.text = "Turn " + str(Globals.turns) + ": The helicopter has dropped you off in tile " + str(formatted_tile_label) + " . Starting to dig..."  + "\n" +  text_log.text
+				Globals.turns += 1
+			if previous_tile == tile:
+				text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + " again"  + "\n" +  text_log.text
+				Globals.turns += 1
+			else:
+				text_log.text = "Turn " + str(Globals.turns) + ": Moved to new tile " + str(formatted_tile_label) + "\n" +  text_log.text
+				Globals.turns += 1
+				text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + " again"  + "\n" +  text_log.text
+				Globals.turns += 1
 			
+			world_array.get(str(tile))['Times_Dug'] += 1	
+				
+			emit_signal("turn_taken", Globals.turns)
+			previous_tile = tile
 			# At the moment the sampling here doesn't use a random
 			# number generator with a seed set - I'm not sure how to pass
 			# in a rng from elsewhere, but can't set it up within the 
