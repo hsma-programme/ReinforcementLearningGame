@@ -42,13 +42,17 @@ func _input(event):
 			if Globals.turns == 0:
 				text_log.text = "Turn " + str(Globals.turns) + ": The helicopter has dropped you off in tile " + str(formatted_tile_label) + " . Starting to dig..."  + "\n" +  text_log.text
 				Globals.turns += 1
-			if previous_tile == tile:
+			elif Globals.turns > 0 and previous_tile == tile:
 				text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + " again"  + "\n" +  text_log.text
+				Globals.turns += 1
+			elif Globals.turns == 199 and previous_tile != tile:
+				"Can't move on penultimate turn - digging in same tile again instead."
+				tile = previous_tile
 				Globals.turns += 1
 			else:
 				text_log.text = "Turn " + str(Globals.turns) + ": Moved to new tile " + str(formatted_tile_label) + "\n" +  text_log.text
 				Globals.turns += 1
-				text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + " again"  + "\n" +  text_log.text
+				text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + "\n" +  text_log.text
 				Globals.turns += 1
 			
 			world_array.get(str(tile))['Times_Dug'] += 1	
@@ -82,6 +86,10 @@ func _input(event):
 		else:
 			print("Can't click there, mate")
 			text_log.text = "Invalid digging location selected - select a tile on the island" + "\n" +  text_log.text
+		
+		if Globals.turns == 200:
+			Globals.final_world_prob_array = world_array
+			get_tree().change_scene("EndScene.tscn")
 
 func _on_SelectTilemap_current_tile_signal(current_tile):
 	tile = Vector2(
@@ -95,7 +103,7 @@ func _on_SelectTilemap_tile_in_diggable_limits(value):
 	else:
 		allow_click = true
 
-
+	
 
 
 

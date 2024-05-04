@@ -8,9 +8,9 @@ var world_prob_array = {}
 
 # https://www.reddit.com/r/godot/comments/b6wn9j/creating_a_gradient_instance_in_a_script/
 # Set grid colors based on observed probability
-var colors = Gradient.new()
+var colors = Globals.colors
 # and the colors need to have values from 0 to 1.0
-var colors_array = [Color(0, 0, .9, 0.3), Color(.5, 0, 0, 0.6), Color(.9, 0, 0, 0.8)]
+var colors_array = Globals.colors_array
 #var box_size = Vector2(1,1)
 #onready var box = get_node("ColorRect")
 
@@ -28,14 +28,12 @@ func _ready():
 	emit_signal("world_prob_array_created", world_prob_array)
 	
 	var idx = 0.0
-	
-	var step = 1.0 / (len(colors_array) - 1)
+	var step = Globals.color_step
 	
 	for color in colors_array:
 		colors.add_point(idx, color)
 		idx = min(idx + step, .999) 
 		# setting a color at point 1.0 failed to add it correctly to the end of the gradient
-		#box_size = box.get_size()
 	
 	var margin_left = 0
 	var margin_top = 0
@@ -86,3 +84,7 @@ func _on_Player_probabilities_updated(tile):
 	#var rect_tile = get_tree().get_root().get_node(str(tile))
 	#rect_tile.color = colors.interpolate(world_prob_array[tile]['Prob_Observed'])
 	#print(rect_tile.color)
+
+
+func _on_DebugButton_button_down():
+	Globals.turns = 199

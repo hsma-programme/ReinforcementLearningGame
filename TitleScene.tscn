@@ -5,13 +5,15 @@
 [ext_resource path="res://TitleScene.gd" type="Script" id=3]
 [ext_resource path="res://Fonts/8-bit-operator/8bitOperatorPlusSC-Bold.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Fonts/8-bit-operator/8bitOperatorPlus8-Regular.ttf" type="DynamicFontData" id=5]
-[ext_resource path="res://Fonts/blox/Blox2.ttf" type="DynamicFontData" id=6]
 [ext_resource path="res://Music/The-One-And-Only.mp3" type="AudioStream" id=7]
 [ext_resource path="res://TitleScreenTempBGBlack.jpg" type="Texture" id=8]
 
-[sub_resource type="DynamicFont" id=1]
-size = 33
-font_data = ExtResource( 6 )
+[sub_resource type="DynamicFontData" id=4]
+font_path = "res://Fonts/blox/Blox2.ttf"
+
+[sub_resource type="DynamicFont" id=5]
+size = 28
+font_data = SubResource( 4 )
 
 [sub_resource type="DynamicFont" id=2]
 size = 14
@@ -60,7 +62,7 @@ margin_top = 2.0
 margin_right = 287.0
 margin_bottom = 46.0
 rect_pivot_offset = Vector2( 0, -2 )
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 5 )
 text = "Treasure Hunt"
 align = 1
 valign = 1

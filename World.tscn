@@ -123,12 +123,12 @@ align = 1
 valign = 1
 
 [node name="SeedLabel" type="Label" parent="LabelControl"]
-margin_left = 6.0
-margin_top = 291.0
-margin_right = 282.0
-margin_bottom = 315.0
+margin_left = 346.0
+margin_top = 299.0
+margin_right = 438.0
+margin_bottom = 313.0
 custom_fonts/font = SubResource( 3 )
-align = 1
+align = 2
 valign = 1
 
 [node name="Log" type="RichTextLabel" parent="LabelControl"]
@@ -175,6 +175,12 @@ margin_top = 64.0
 margin_right = 96.0
 margin_bottom = 96.0
 
+[node name="DebugButton" type="Button" parent="."]
+margin_left = 312.0
+margin_top = 290.0
+margin_right = 330.0
+margin_bottom = 310.0
+
 [connection signal="world_prob_array_created" from="." to="Player" method="_on_World_world_prob_array_created"]
 [connection signal="current_tile_signal" from="SelectTilemap" to="LabelControl" method="_on_SelectTilemap_current_tile_signal"]
 [connection signal="current_tile_signal" from="SelectTilemap" to="Player" method="_on_SelectTilemap_current_tile_signal"]
@@ -184,3 +190,4 @@ margin_bottom = 96.0
 [connection signal="probabilities_updated" from="Player" to="." method="_on_Player_probabilities_updated"]
 [connection signal="treasure_found" from="Player" to="LabelControl" method="_on_Player_treasure_found"]
 [connection signal="turn_taken" from="Player" to="TurnUI" method="_on_Player_turn_taken"]
+[connection signal="button_down" from="DebugButton" to="." method="_on_DebugButton_button_down"]

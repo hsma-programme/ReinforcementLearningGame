@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/The-One-And-Only_slower_swung.mp3-b902c303be0a903c071cfb22a20aed07.mp3str"
+
+[deps]
+
+source_file="res://Music/The-One-And-Only_slower_swung.mp3"
+dest_files=[ "res://.import/The-One-And-Only_slower_swung.mp3-b902c303be0a903c071cfb22a20aed07.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
