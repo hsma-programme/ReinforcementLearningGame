@@ -19,6 +19,8 @@ signal treasure_found
 signal turn_taken
 signal probabilities_updated
 
+var found_popup_scene = preload("res://Popups/YouFoundPopup.tscn")
+
 func _on_World_world_prob_array_created(value):
 	world_array = value
 
@@ -27,6 +29,8 @@ func _on_LabelControl_formatted_tile_label_signal(value):
 
 func _ready():
 	print(world_array)
+	var youfound_popup = found_popup_scene.instance()
+	add_child(youfound_popup)
 	#text_log.add_color_override("font_color_selected", Color(0,0,0,0))
 	#var current_seed = Globals.random_seed_selected
 	#rng.seed = hash(str(current_seed))
@@ -35,6 +39,10 @@ func _ready():
 func _input(event):		
 	if (event.is_pressed() and event.button_index == BUTTON_LEFT):
 		if allow_click == true:
+			#var popup = get_node("Player/Popup")
+			var popup = get_node("./Popup")
+			var popup_label = get_node("./Popup/YouFoundLabel")
+			var popup_timer = get_node("./Popup/DismissAutoTimer")
 			print("Clicked " + str(tile))
 			#print(world_array)
 			#print(world_array.get(str(tile)))
@@ -66,6 +74,7 @@ func _input(event):
 			# Is it worth seeding with the turn number for reproducibility?
 			# Or seed * turn number for some variation across seeds, at least?
 			rand_float = randf()
+			
 			print(rand_float)
 			print(world_array.get(str(tile))['Prob'])
 			
@@ -74,6 +83,9 @@ func _input(event):
 				Globals.treasure_count += 1
 				emit_signal("treasure_found", Globals.treasure_count)
 				world_array.get(str(tile))['Times_Success'] += 1
+				popup_label.text = "You found treasure!"
+				popup.show()
+				popup_timer.start()
 
 			else:
 				text_log.text = "Turn " + str(Globals.turns) + ": Didn't find treasure in tile " +  str(formatted_tile_label) + "\n" +  text_log.text
