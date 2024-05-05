@@ -84,8 +84,10 @@ func _input(event):
 				emit_signal("treasure_found", Globals.treasure_count)
 				world_array.get(str(tile))['Times_Success'] += 1
 				popup_label.text = "You found treasure!"
-				popup.show()
+				#popup.show()
+				popup.popup()
 				popup_timer.start()
+				get_tree().paused = true
 
 			else:
 				text_log.text = "Turn " + str(Globals.turns) + ": Didn't find treasure in tile " +  str(formatted_tile_label) + "\n" +  text_log.text
