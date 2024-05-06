@@ -124,12 +124,11 @@ align = 1
 valign = 1
 
 [node name="SeedLabel" type="Label" parent="LabelControl"]
-margin_left = 272.0
-margin_top = 298.0
-margin_right = 364.0
-margin_bottom = 312.0
+margin_left = 6.0
+margin_top = 301.0
+margin_right = 98.0
+margin_bottom = 315.0
 custom_fonts/font = SubResource( 3 )
-align = 2
 valign = 1
 
 [node name="Log" type="RichTextLabel" parent="LabelControl"]
@@ -184,6 +183,9 @@ margin_right = 330.0
 margin_bottom = 310.0
 
 [node name="ReturnToHomeButton" parent="." instance=ExtResource( 15 )]
+
+[node name="ConfirmReturnHomeDialog" parent="ReturnToHomeButton" index="0"]
+visible = false
 
 [connection signal="world_prob_array_created" from="." to="Player" method="_on_World_world_prob_array_created"]
 [connection signal="current_tile_signal" from="SelectTilemap" to="LabelControl" method="_on_SelectTilemap_current_tile_signal"]
