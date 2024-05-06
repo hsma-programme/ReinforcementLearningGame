@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ReturnToHomeButton.gd" type="Script" id=1]
+[ext_resource path="res://ConfirmReturnHomeDialog.gd" type="Script" id=2]
+
+[node name="ReturnToHomeButton" type="Button"]
+pause_mode = 2
+margin_left = 420.0
+margin_top = 293.0
+margin_right = 441.0
+margin_bottom = 313.0
+script = ExtResource( 1 )
+
+[node name="ConfirmReturnHomeDialog" type="ConfirmationDialog" parent="."]
+pause_mode = 2
+visible = true
+margin_left = -280.0
+margin_top = -186.0
+margin_right = -80.0
+margin_bottom = -116.0
+popup_exclusive = true
+dialog_text = "Return to the title screen?"
+script = ExtResource( 2 )
+
+[connection signal="button_down" from="." to="." method="_on_ReturnToHomeButton_button_down"]
+[connection signal="confirmed" from="ConfirmReturnHomeDialog" to="ConfirmReturnHomeDialog" method="_on_ConfirmReturnHomeDialog_confirmed"]
+[connection signal="popup_hide" from="ConfirmReturnHomeDialog" to="ConfirmReturnHomeDialog" method="_on_ConfirmReturnHomeDialog_popup_hide"]

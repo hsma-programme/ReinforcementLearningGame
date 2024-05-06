@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://GrassTilemap.gd" type="Script" id=1]
 [ext_resource path="res://SelectTilemap.tscn" type="PackedScene" id=2]
@@ -14,6 +14,7 @@
 [ext_resource path="res://UI/theme_black.tres" type="Theme" id=12]
 [ext_resource path="res://Fonts/8-bit-operator/8bitOperatorPlus-Bold.ttf" type="DynamicFontData" id=13]
 [ext_resource path="res://UI/Fantasy RPG (Toony) 32x32 Chest.png" type="Texture" id=14]
+[ext_resource path="res://UI/ReturnToHomeButton.tscn" type="PackedScene" id=15]
 
 [sub_resource type="TileSet" id=1]
 0/name = "tiles.png 0"
@@ -123,10 +124,10 @@ align = 1
 valign = 1
 
 [node name="SeedLabel" type="Label" parent="LabelControl"]
-margin_left = 346.0
-margin_top = 299.0
-margin_right = 438.0
-margin_bottom = 313.0
+margin_left = 272.0
+margin_top = 298.0
+margin_right = 364.0
+margin_bottom = 312.0
 custom_fonts/font = SubResource( 3 )
 align = 2
 valign = 1
@@ -182,6 +183,8 @@ margin_top = 290.0
 margin_right = 330.0
 margin_bottom = 310.0
 
+[node name="ReturnToHomeButton" parent="." instance=ExtResource( 15 )]
+
 [connection signal="world_prob_array_created" from="." to="Player" method="_on_World_world_prob_array_created"]
 [connection signal="current_tile_signal" from="SelectTilemap" to="LabelControl" method="_on_SelectTilemap_current_tile_signal"]
 [connection signal="current_tile_signal" from="SelectTilemap" to="Player" method="_on_SelectTilemap_current_tile_signal"]
@@ -192,3 +195,5 @@ margin_bottom = 310.0
 [connection signal="treasure_found" from="Player" to="LabelControl" method="_on_Player_treasure_found"]
 [connection signal="turn_taken" from="Player" to="TurnUI" method="_on_Player_turn_taken"]
 [connection signal="button_down" from="DebugButton" to="." method="_on_DebugButton_button_down"]
+
+[editable path="ReturnToHomeButton"]
