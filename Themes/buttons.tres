@@ -4,6 +4,6 @@
 font_path = "res://Fonts/8-bit-operator/8bitOperatorPlusSC-Bold.ttf"
 
 [resource]
-size = 9
+size = 17
 outline_color = Color( 0, 0, 0, 1 )
 font_data = SubResource( 1 )

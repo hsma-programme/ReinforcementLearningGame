@@ -1,12 +1,14 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://TitleScreenTempBG.jpg" type="Texture" id=1]
 [ext_resource path="res://TitleScreenTemp.jpg" type="Texture" id=2]
 [ext_resource path="res://TitleScene.gd" type="Script" id=3]
 [ext_resource path="res://Themes/buttons_v2.tres" type="Theme" id=4]
 [ext_resource path="res://Fonts/8-bit-operator/8bitOperatorPlus8-Regular.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://UI/PopupMenuAIMode.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Music/The-One-And-Only.mp3" type="AudioStream" id=7]
 [ext_resource path="res://TitleScreenTempBGBlack.jpg" type="Texture" id=8]
+[ext_resource path="res://Themes/buttons.tres" type="DynamicFont" id=9]
 
 [sub_resource type="DynamicFontData" id=4]
 font_path = "res://Fonts/blox/Blox2.ttf"
@@ -87,19 +89,27 @@ margin_bottom = 313.0
 rect_pivot_offset = Vector2( 61, 16 )
 theme = ExtResource( 4 )
 custom_fonts/font = SubResource( 7 )
-text = "Play"
+text = "Manual Play"
 flat = false
 
-[node name="AiPlayButton1" type="ToolButton" parent="."]
+[node name="AiPlayButton1" type="MenuButton" parent="."]
 margin_left = 149.0
 margin_top = 287.0
 margin_right = 284.0
 margin_bottom = 314.0
 rect_pivot_offset = Vector2( 61, 16 )
 theme = ExtResource( 4 )
-disabled = true
-text = "AI Play (Coming Soon)"
+custom_fonts/font = ExtResource( 9 )
+text = "AI Play"
 flat = false
+
+[node name="PopupMenuAIMode" parent="." instance=ExtResource( 6 )]
+visible = false
+margin_left = -77.0
+margin_top = 1.0
+margin_right = 231.0
+margin_bottom = 74.0
 
 [connection signal="text_changed" from="LineEdit" to="." method="_on_LineEdit_text_changed"]
 [connection signal="pressed" from="ManualPlayButton" to="." method="_on_ManualPlayButton_pressed"]
+[connection signal="button_down" from="AiPlayButton1" to="." method="_on_AiPlayButton1_button_down"]

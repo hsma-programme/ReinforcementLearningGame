@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://UI/PopupMenuAIMode.gd" type="Script" id=1]
+[ext_resource path="res://Themes/buttons_v2.tres" type="Theme" id=2]
+
+[node name="PopupMenuAIMode" type="PopupMenu"]
+pause_mode = 2
+visible = true
+margin_right = 182.0
+margin_bottom = 20.0
+popup_exclusive = true
+hide_on_item_selection = false
+hide_on_checkable_item_selection = false
+script = ExtResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+pause_mode = 2
+margin_right = 306.0
+margin_bottom = 68.0
+theme = ExtResource( 2 )
+
+[node name="SimpleAIButton" type="Button" parent="VBoxContainer"]
+pause_mode = 2
+margin_right = 458.0
+margin_bottom = 27.0
+mouse_filter = 1
+mouse_default_cursor_shape = 2
+text = "Simple AI - Explore/Exploit"
+
+[node name="AdvancedAIButton" type="Button" parent="VBoxContainer"]
+pause_mode = 2
+margin_top = 31.0
+margin_right = 458.0
+margin_bottom = 58.0
+mouse_filter = 1
+mouse_default_cursor_shape = 2
+text = "Advanced AI - Explore/Exploit + Learning Rate "
+
+[node name="CancelButton" type="Button" parent="VBoxContainer"]
+pause_mode = 2
+margin_top = 62.0
+margin_right = 458.0
+margin_bottom = 89.0
+mouse_filter = 1
+mouse_default_cursor_shape = 2
+text = "Cancel"
+
+[connection signal="button_down" from="VBoxContainer/SimpleAIButton" to="." method="_on_SimpleAIButton_button_down"]
+[connection signal="button_down" from="VBoxContainer/AdvancedAIButton" to="." method="_on_AdvancedAIButton_button_down"]
+[connection signal="button_down" from="VBoxContainer/CancelButton" to="." method="_on_CancelButton_button_down"]
