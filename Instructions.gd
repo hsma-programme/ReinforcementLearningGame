@@ -1,20 +1,17 @@
 extends Node2D
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
+	pass
 
 func _on_Button_button_down():
 	get_tree().change_scene("World.tscn")
+
+func _on_ExploitationRate_value_changed(value):
+	Globals.agent_exploitation_rate = value
+
+func _on_LearningRate_value_changed(value):
+	Globals.agent_learning_rate = value
+
+func _on_PlaySpeed_value_changed(value):
+	Globals.play_speed = value

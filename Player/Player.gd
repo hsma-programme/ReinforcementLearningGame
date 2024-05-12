@@ -11,11 +11,12 @@ onready var world = $".."
 onready var world_array = world.world_prob_array
 onready var text_log = $"../LabelControl/Log"
 
-onready var ai_wait_timer = $AIWaitTimer
+onready var ai_wait_length = Globals.get_wait(Globals.play_speed)
 
 var formatted_tile_label = "Z9"
 
 var previous_tile = Vector2.ZERO
+
 
 signal treasure_found
 signal turn_taken
@@ -189,7 +190,7 @@ func _input(event):
 		else:
 			update_probabilities_with_lr(Globals.agent_learning_rate)
 		get_tree().paused = true
-		yield(get_tree().create_timer(1.0), "timeout")
+		yield(get_tree().create_timer(ai_wait_length), "timeout")
 		get_tree().paused = false
 		
 		
@@ -245,7 +246,7 @@ func _input(event):
 			else:
 				update_probabilities_with_lr(Globals.agent_learning_rate)
 			get_tree().paused = true
-			yield(get_tree().create_timer(1.0), "timeout")
+			yield(get_tree().create_timer(ai_wait_length), "timeout")
 			get_tree().paused = false
 		
 		on_final_turn()

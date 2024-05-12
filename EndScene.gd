@@ -8,8 +8,15 @@ var colors_array = Globals.colors_array
 
 onready var treasureLabel = $TreasureLabel
 
+var observed_estimated_label = ""
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	if Globals.play_mode == "manual" or Globals.play_mode == "ai_simple":
+		observed_estimated_label = "Observed: " 
+	else:
+		observed_estimated_label = "Estimated: "
+	
 	var step = Globals.color_step
 	var idx = 0.0
 	var cell_size = 52
@@ -40,7 +47,7 @@ func _ready():
 			lab.text = "Not\nExplored!" + "\n\nActual:" +  str(world_prob_array.get(str(cell))['Prob']) + "\n"
 			x.color = Color(0, .5, 0, 0.25)
 		else:
-			lab.text = "Observed: " + str(stepify(world_prob_array.get(str(cell))['Prob_Observed'],0.01)) + "\n\nActual: " +  str(world_prob_array.get(str(cell))['Prob']) + "\n\nTimes Dug: " + str(world_prob_array.get(str(cell))['Times_Dug'])
+			lab.text = observed_estimated_label + str(stepify(world_prob_array.get(str(cell))['Prob_Observed'],0.01)) + "\n\nActual: " +  str(world_prob_array.get(str(cell))['Prob']) + "\n\nTimes Dug: " + str(world_prob_array.get(str(cell))['Times_Dug'])
 			x.color = colors.interpolate(clamp(world_prob_array[str(cell)]['Prob_Observed'], 0.01, 0.99))
 		#lab.set("theme_override_font_sizes/font_size", 8)
 		#lab.add_theme_font_size_override("font_size", 8)

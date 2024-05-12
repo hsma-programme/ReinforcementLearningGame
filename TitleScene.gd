@@ -13,7 +13,6 @@ func _on_ManualPlayButton_pressed():
 func _on_LineEdit_text_changed(new_text):
 	Globals.random_seed_selected = new_text
 
-
 func _on_AiPlayButton1_button_down():
 	choose_ai_mode_popup.popup_centered()
 	get_tree().paused = true

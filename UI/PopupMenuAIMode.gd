@@ -6,13 +6,13 @@ func _ready():
 
 func _on_SimpleAIButton_button_down():
 	print("Simple AI button pressed")
-	get_tree().change_scene("World.tscn")
+	get_tree().change_scene("Instructions_AI_Simple.tscn")
 	Globals.play_mode = "ai_simple"
 	get_tree().paused = false
 
 func _on_AdvancedAIButton_button_down():
 	print("Complex AI button pressed")
-	get_tree().change_scene("World.tscn")
+	get_tree().change_scene("Instructions_AI_Complex.tscn")
 	Globals.play_mode = "ai_advanced"
 	get_tree().paused = false
 

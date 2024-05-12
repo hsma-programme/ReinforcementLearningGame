@@ -37,13 +37,10 @@ func _on_SelectTilemap_current_tile_signal(tile_coords):
 		
 		label.text = "Selected Tile = " + formatted_tile_label
 		emit_signal("formatted_tile_label_signal", formatted_tile_label)
-		
-		
 
 func _on_SelectTilemap_tile_in_diggable_limits(value):
 	if value == false:
 		label.text = "No Diggable Tile Selected"
-
 
 func _on_Player_treasure_found(value):
 	if value == 1:
