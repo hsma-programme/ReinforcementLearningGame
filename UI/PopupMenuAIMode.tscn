@@ -5,7 +5,6 @@
 
 [node name="PopupMenuAIMode" type="PopupMenu"]
 pause_mode = 2
-visible = true
 margin_right = 182.0
 margin_bottom = 20.0
 popup_exclusive = true
