@@ -1,9 +1,9 @@
 extends TileMap
 
-var GridXStart = 2
-var GridYStart = 2
-var GridSizeX = 5
-var GridSizeY = 5
+var GridXStart = Globals.GridXStart
+var GridYStart = Globals.GridYStart
+var GridSizeX = Globals.GridSizeX
+var GridSizeY = Globals.GridSizeY
 
 var TileRangeDic = {}
 
