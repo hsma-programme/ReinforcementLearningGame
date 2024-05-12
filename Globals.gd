@@ -8,7 +8,16 @@ var treasure_count = 0
 var play_mode = "none"
 
 var agent_exploitation_rate = 0.81
-var learning_rate = 0.1
+
+# the beta parameter for the linear operator learning rule - how much emphasis
+# will be put on the new sample vs the historic estimate of this cell.
+# learning rate = 1 would lead to only the newest sample being used (so
+# everything would be estimated as either perfect or empty)
+# learning rate = 0 would never take any notice of new samples, and never
+# change estimates.  learning rates in between would gradually place more
+# emphasis on the latest experience (a faster learning rate) as tending
+# towards 1
+var agent_learning_rate = 0.1 # default = 0.3
 
 var GridXStart = 2
 var GridYStart = 2

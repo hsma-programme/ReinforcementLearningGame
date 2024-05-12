@@ -93,6 +93,19 @@ func update_probabilities():
 			)
 	emit_signal("probabilities_updated", tile)
 
+func update_probabilities_with_lr(learning_rate):
+	var prev_estimate = world_array.get(str(tile))['Prob_Estimate']
+	
+	world_array.get(str(tile))['Prob_Estimate'] = ((Globals.agent_learning_rate *
+													0.0) +
+													(1.0-Globals.agent_learning_rate) *
+													 prev_estimate)
+	
+	world_array.get(str(tile))['Prob_Observed'] = world_array.get(str(tile))['Prob_Estimate']
+	
+	emit_signal("probabilities_updated", tile)
+
+
 func on_invalid_dig_location_clicked():
 	print("Can't click there, mate")
 	text_log.text = "Invalid digging location selected - select a tile on the island" + "\n" +  text_log.text
@@ -163,14 +176,23 @@ func _input(event):
 				on_final_turn()
 	# Update this after 
 	elif Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
+
+		
 		# Select a random first tile
 		tile = str(get_random_tile())
 		previous_tile = tile
 		first_turn_msg()
 		update_after_turn()	
+		digging_outcome()
+		if Globals.play_mode == "ai_simple":
+			update_probabilities()
+		else:
+			update_probabilities_with_lr(Globals.agent_learning_rate)
 		get_tree().paused = true
 		yield(get_tree().create_timer(1.0), "timeout")
 		get_tree().paused = false
+		
+		
 		
 		var exploit_or_explore = 0.0
 		
@@ -218,11 +240,16 @@ func _input(event):
 				
 			update_after_turn()	
 			digging_outcome()
-			update_probabilities()
+			if Globals.play_mode == "ai_simple":
+				update_probabilities()
+			else:
+				update_probabilities_with_lr(Globals.agent_learning_rate)
 			get_tree().paused = true
 			yield(get_tree().create_timer(1.0), "timeout")
 			get_tree().paused = false
-			
-			
+		
 		on_final_turn()
 			
+		
+	
+		
