@@ -160,8 +160,6 @@ margin_bottom = 34.0
 texture = ExtResource( 14 )
 expand = true
 
-[node name="Player" parent="." instance=ExtResource( 10 )]
-
 [node name="TurnUI" parent="." instance=ExtResource( 11 )]
 margin_left = 102.0
 margin_top = -58.0
@@ -174,6 +172,8 @@ margin_left = 64.0
 margin_top = 64.0
 margin_right = 96.0
 margin_bottom = 96.0
+
+[node name="Player" parent="." instance=ExtResource( 10 )]
 
 [node name="DebugButton" type="Button" parent="."]
 visible = false

@@ -3,7 +3,10 @@ extends Node2D
 var allow_click = false
 var tile = Vector2.ZERO
 
+
 var rand_float = 0.0
+
+
 
 onready var select_tilemap = $"../SelectTilemap"
 onready var world = $".."
@@ -13,10 +16,17 @@ onready var text_log = $"../LabelControl/Log"
 
 onready var ai_wait_length = Globals.get_wait(Globals.play_speed)
 
+onready var sprite = $RobotSprite
+
 var formatted_tile_label = "Z9"
 
+var chosen_tile_click = Vector2.ZERO
 var previous_tile = Vector2.ZERO
 
+var state = "idle"
+
+var velocity = Vector2.ZERO
+var destination = Vector2.ZERO
 
 signal treasure_found
 signal turn_taken
@@ -41,8 +51,18 @@ func _on_SelectTilemap_tile_in_diggable_limits(value):
 		allow_click = false
 	else:
 		allow_click = true
+var t = 0.0
+
+func run_move_animation():
+	state = "move"
+	chosen_tile_click = tile
+	sprite.play("Walk")
+	yield(get_tree().create_timer(ai_wait_length), "timeout")
+	state = "idle"
+	sprite.play("Idle")
 
 func _ready():
+	sprite.visible = false
 	print(world_array)
 	var youfound_popup = found_popup_scene.instance()
 	add_child(youfound_popup)
@@ -50,9 +70,23 @@ func _ready():
 	#var current_seed = Globals.random_seed_selected
 	#rng.seed = hash(str(current_seed))
 
+func _process(delta):
+	#t += delta * 0.4
+	if state == "move":
+		print(sprite.position)
+		print(chosen_tile_click)
+		destination = Vector2(int(chosen_tile_click[0])*32 + Globals.GridXStart*32, int(chosen_tile_click[2])*32 + Globals.GridYStart*32)
+		sprite.position = sprite.position.linear_interpolate(destination, delta*3.0)
+		if destination < sprite.position:
+			sprite.flip_h = true
+		else:
+			sprite.flip_h = false
+
 func first_turn_msg():
+	run_move_animation()
 	text_log.text = "Turn " + str(Globals.turns) + ": The helicopter has dropped you off in tile " + str(formatted_tile_label) + " . Starting to dig..."  + "\n" +  text_log.text
 	Globals.turns += 1
+	sprite.visible = true
 
 func dug_again_same_tile_msg():
 	text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + " again"  + "\n" +  text_log.text
@@ -62,10 +96,12 @@ func penultimate_turn_invalid_selection_msg():
 	text_log.text = "Can't move on penultimate turn - digging in same tile again instead."
 	tile = previous_tile
 	Globals.turns += 1
+	
 
 func move_tile_and_dig_msg():
 	text_log.text = "Turn " + str(Globals.turns) + ": Moved to new tile " + str(formatted_tile_label) + "\n" +  text_log.text
-	Globals.turns += 1
+	Globals.turns += 1	
+	run_move_animation()
 	text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + "\n" +  text_log.text
 	Globals.turns += 1
 
