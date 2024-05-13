@@ -78,11 +78,18 @@ animations = [ {
 } ]
 
 [node name="Player" type="Node2D"]
-pause_mode = 2
+pause_mode = 1
 script = ExtResource( 1 )
 
 [node name="RobotSprite" type="AnimatedSprite" parent="."]
+pause_mode = 2
 position = Vector2( -16, -17 )
 frames = SubResource( 13 )
 animation = "Idle"
 centered = false
+
+[node name="ClickCooldownTimer" type="Timer" parent="."]
+wait_time = 1.5
+one_shot = true
+
+[connection signal="timeout" from="ClickCooldownTimer" to="." method="_on_ClickCooldownTimer_timeout"]

@@ -46,9 +46,10 @@ func _process(delta):
 	# tile on the map
 	# If it is in the range of diggable tiles, then set the
 	# TileSelect outline to visible 
-	if TileRangeDic.has(str(current_tile)):
-		emit_signal("tile_in_diggable_limits", true)
-		set_cell(current_tile[0], current_tile[1], 1)
-	else:
-		emit_signal("tile_in_diggable_limits", false)
+	if Globals.can_click: 
+		if TileRangeDic.has(str(current_tile)):
+			emit_signal("tile_in_diggable_limits", true)
+			set_cell(current_tile[0], current_tile[1], 1)
+		else:
+			emit_signal("tile_in_diggable_limits", false)
 

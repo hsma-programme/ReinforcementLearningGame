@@ -6,8 +6,6 @@ var tile = Vector2.ZERO
 
 var rand_float = 0.0
 
-
-
 onready var select_tilemap = $"../SelectTilemap"
 onready var world = $".."
 
@@ -15,6 +13,7 @@ onready var world_array = world.world_prob_array
 onready var text_log = $"../LabelControl/Log"
 
 onready var ai_wait_length = Globals.get_wait(Globals.play_speed)
+
 
 onready var sprite = $RobotSprite
 
@@ -66,6 +65,7 @@ func _ready():
 	print(world_array)
 	var youfound_popup = found_popup_scene.instance()
 	add_child(youfound_popup)
+	print("Wait length: " + str(ai_wait_length))
 	#text_log.add_color_override("font_color_selected", Color(0,0,0,0))
 	#var current_seed = Globals.random_seed_selected
 	#rng.seed = hash(str(current_seed))
@@ -73,15 +73,18 @@ func _ready():
 func _process(delta):
 	#t += delta * 0.4
 	if state == "move":
-		print(sprite.position)
-		print(chosen_tile_click)
-		destination = Vector2(int(chosen_tile_click[0])*32 + Globals.GridXStart*32, int(chosen_tile_click[2])*32 + Globals.GridYStart*32)
+		#print(sprite.position)
+		#print(chosen_tile_click)
+		destination = Vector2(int(chosen_tile_click[0])*32 + Globals.GridXStart*32, int(chosen_tile_click[1])*32 + Globals.GridYStart*32)
 		sprite.position = sprite.position.linear_interpolate(destination, delta*3.0)
 		if destination < sprite.position:
 			sprite.flip_h = true
 		else:
 			sprite.flip_h = false
 
+func _on_Timer_timeout():
+	Globals.can_click = true
+	
 func first_turn_msg():
 	run_move_animation()
 	text_log.text = "Turn " + str(Globals.turns) + ": The helicopter has dropped you off in tile " + str(formatted_tile_label) + " . Starting to dig..."  + "\n" +  text_log.text
@@ -110,7 +113,7 @@ func treasure_found_popup(popup_label, popup, popup_timer):
 	#popup.show()
 	popup.popup()
 	popup_timer.start()
-	get_tree().paused = true
+	#get_tree().paused = true
 
 func on_treasure_found(popup_label="", popup="", popup_timer=""):
 	text_log.text = "Turn " + str(Globals.turns) + ": Found treasure in tile " +  str(formatted_tile_label) + "\n" +  text_log.text
@@ -183,31 +186,37 @@ func _input(event):
 				print("Clicked " + str(tile))
 				#print(world_array)
 				#print(world_array.get(str(tile)))
+				
+				if Globals.can_click:
 
-				if Globals.turns == 0:
-					first_turn_msg()
-				elif Globals.turns > 0 and previous_tile == tile:
-					dug_again_same_tile_msg()
-				elif Globals.turns == (Globals.max_turns-1) and previous_tile != tile:
-					penultimate_turn_invalid_selection_msg()
-				else:
-					move_tile_and_dig_msg()
-				
-				update_after_turn()	
+					if Globals.turns == 0:
+						first_turn_msg()
+					elif Globals.turns > 0 and previous_tile == tile:
+						dug_again_same_tile_msg()
+					elif Globals.turns == (Globals.max_turns-1) and previous_tile != tile:
+						penultimate_turn_invalid_selection_msg()
+					else:
+						move_tile_and_dig_msg()
+					
+					Globals.can_click = false
+					$ClickCooldownTimer.start()
+					
+					update_after_turn()	
 
-				# At the moment the sampling here doesn't use a random
-				# number generator with a seed set - I'm not sure how to pass
-				# in a rng from elsewhere, but can't set it up within the 
-				# input (with seed set) else we just get the same answer each time
-				# Is it worth seeding with the turn number for reproducibility?
-				# Or seed * turn number for some variation across seeds, at least?
-				
-				digging_outcome(popup_label, popup, popup_timer)
-				
-				update_probabilities()
+					# At the moment the sampling here doesn't use a random
+					# number generator with a seed set - I'm not sure how to pass
+					# in a rng from elsewhere, but can't set it up within the 
+					# input (with seed set) else we just get the same answer each time
+					# Is it worth seeding with the turn number for reproducibility?
+					# Or seed * turn number for some variation across seeds, at least?
+					
+					digging_outcome(popup_label, popup, popup_timer)
+					
+					update_probabilities()					
 					
 			else:
 				on_invalid_dig_location_clicked()
+				
 			
 			if Globals.turns == Globals.max_turns:
 				on_final_turn()
@@ -225,9 +234,9 @@ func _input(event):
 			update_probabilities()
 		else:
 			update_probabilities_with_lr(Globals.agent_learning_rate)
-		get_tree().paused = true
+		#get_tree().paused = true
 		yield(get_tree().create_timer(ai_wait_length), "timeout")
-		get_tree().paused = false
+		#get_tree().paused = false
 		
 		
 		
@@ -281,12 +290,16 @@ func _input(event):
 				update_probabilities()
 			else:
 				update_probabilities_with_lr(Globals.agent_learning_rate)
-			get_tree().paused = true
+			#get_tree().paused = true
 			yield(get_tree().create_timer(ai_wait_length), "timeout")
-			get_tree().paused = false
+			#get_tree().paused = false
 		
 		on_final_turn()
 			
 		
 	
 		
+
+
+func _on_ClickCooldownTimer_timeout():
+	Globals.can_click = true
