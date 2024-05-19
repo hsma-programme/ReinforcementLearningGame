@@ -40,45 +40,6 @@ var found_popup_scene = preload("res://Popups/YouFoundPopup.tscn")
 
 func _on_World_world_prob_array_created(value):
 	world_array = value
-
-func _on_LabelControl_formatted_tile_label_signal(value):
-	formatted_tile_label = value
-
-func _on_SelectTilemap_current_tile_signal(current_tile):
-	tile = Vector2(
-		current_tile[0]-select_tilemap.GridXStart, 
-		current_tile[1]-select_tilemap.GridYStart
-		)
-
-func _on_SelectTilemap_tile_in_diggable_limits(value):
-	if value == false:
-		allow_click = false
-	else:
-		allow_click = true
-var t = 0.0
-
-func run_move_animation():
-	state = "move"
-	chosen_tile_click = tile
-	sprite.play("Walk")
-	yield(get_tree().create_timer(ai_wait_length), "timeout")
-	state = "idle"
-	sprite.play("Idle")
-
-func _ready():
-	sprite.visible = false
-	
-	print(world_array)
-	var youfound_popup = found_popup_scene.instance()
-	add_child(youfound_popup)
-	
-	print("Wait length: " + str(ai_wait_length))
-	ai_move_cooldown_timer.wait_time = ai_wait_length
-	#text_log.add_color_override("font_color_selected", Color(0,0,0,0))
-	#var current_seed = Globals.random_seed_selected
-	#rng.seed = hash(str(current_seed))
-	# Update this after 
-	
 	if Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
 		Globals.can_click = false
 			
@@ -156,6 +117,46 @@ func _ready():
 			#get_tree().paused = false
 		
 		on_final_turn()
+
+func _on_LabelControl_formatted_tile_label_signal(value):
+	formatted_tile_label = value
+
+func _on_SelectTilemap_current_tile_signal(current_tile):
+	tile = Vector2(
+		current_tile[0]-select_tilemap.GridXStart, 
+		current_tile[1]-select_tilemap.GridYStart
+		)
+
+func _on_SelectTilemap_tile_in_diggable_limits(value):
+	if value == false:
+		allow_click = false
+	else:
+		allow_click = true
+var t = 0.0
+
+func run_move_animation():
+	state = "move"
+	chosen_tile_click = tile
+	sprite.play("Walk")
+	yield(get_tree().create_timer(ai_wait_length), "timeout")
+	state = "idle"
+	sprite.play("Idle")
+
+func _ready():
+	sprite.visible = false
+	
+	print(world_array)
+	var youfound_popup = found_popup_scene.instance()
+	add_child(youfound_popup)
+	
+	print("Wait length: " + str(ai_wait_length))
+	ai_move_cooldown_timer.wait_time = ai_wait_length
+	#text_log.add_color_override("font_color_selected", Color(0,0,0,0))
+	#var current_seed = Globals.random_seed_selected
+	#rng.seed = hash(str(current_seed))
+	# Update this after 
+
+	
 
 func _process(delta):
 	#t += delta * 0.4

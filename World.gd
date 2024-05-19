@@ -37,9 +37,11 @@ func _ready():
 		selectTilemap.GridSizeY
 	)
 	#print(world_prob_array)
-
-	emit_signal("world_prob_array_created", world_prob_array)
+	
 	Globals.initial_world_prob_array = world_prob_array
+	
+	if Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
+		$LabelControl/TileSelectLabel.visible = false
 	
 	var idx = 0.0
 	var step = Globals.color_step
@@ -86,6 +88,7 @@ func _ready():
 		#x.color = Color(1,0,0,1)
 		# Add node to world
 		add_child(x)
+	emit_signal("world_prob_array_created", world_prob_array)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
