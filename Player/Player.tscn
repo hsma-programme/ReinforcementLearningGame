@@ -88,8 +88,12 @@ frames = SubResource( 13 )
 animation = "Idle"
 centered = false
 
+[node name="AiMoveCooldownTimer" type="Timer" parent="."]
+one_shot = true
+
 [node name="ClickCooldownTimer" type="Timer" parent="."]
 wait_time = 1.5
 one_shot = true
 
+[connection signal="timeout" from="AiMoveCooldownTimer" to="." method="_on_AiMoveCooldownTimer_timeout"]
 [connection signal="timeout" from="ClickCooldownTimer" to="." method="_on_ClickCooldownTimer_timeout"]

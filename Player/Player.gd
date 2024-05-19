@@ -3,6 +3,7 @@ extends Node2D
 var allow_click = false
 var tile = Vector2.ZERO
 
+var outcome_var = false
 
 var rand_float = 0.0
 
@@ -13,7 +14,11 @@ onready var world_array = world.world_prob_array
 onready var text_log = $"../LabelControl/Log"
 
 onready var ai_wait_length = Globals.get_wait(Globals.play_speed)
+onready var ai_move_cooldown_timer = $AiMoveCooldownTimer
 
+onready var click_cooldown_timer = $ClickCooldownTimer
+
+var ai_can_move = true
 
 onready var sprite = $RobotSprite
 
@@ -62,169 +67,23 @@ func run_move_animation():
 
 func _ready():
 	sprite.visible = false
+	
 	print(world_array)
 	var youfound_popup = found_popup_scene.instance()
 	add_child(youfound_popup)
+	
 	print("Wait length: " + str(ai_wait_length))
+	ai_move_cooldown_timer.wait_time = ai_wait_length
 	#text_log.add_color_override("font_color_selected", Color(0,0,0,0))
 	#var current_seed = Globals.random_seed_selected
 	#rng.seed = hash(str(current_seed))
-
-func _process(delta):
-	#t += delta * 0.4
-	if state == "move":
-		#print(sprite.position)
-		#print(chosen_tile_click)
-		destination = Vector2(int(chosen_tile_click[0])*32 + Globals.GridXStart*32, int(chosen_tile_click[1])*32 + Globals.GridYStart*32)
-		sprite.position = sprite.position.linear_interpolate(destination, delta*3.0)
-		if destination < sprite.position:
-			sprite.flip_h = true
-		else:
-			sprite.flip_h = false
-
-func _on_Timer_timeout():
-	Globals.can_click = true
-	
-func first_turn_msg():
-	run_move_animation()
-	text_log.text = "Turn " + str(Globals.turns) + ": The helicopter has dropped you off in tile " + str(formatted_tile_label) + " . Starting to dig..."  + "\n" +  text_log.text
-	Globals.turns += 1
-	sprite.visible = true
-
-func dug_again_same_tile_msg():
-	text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + " again"  + "\n" +  text_log.text
-	Globals.turns += 1
-
-func penultimate_turn_invalid_selection_msg():
-	text_log.text = "Can't move on penultimate turn - digging in same tile again instead."
-	tile = previous_tile
-	Globals.turns += 1
-	
-
-func move_tile_and_dig_msg():
-	text_log.text = "Turn " + str(Globals.turns) + ": Moved to new tile " + str(formatted_tile_label) + "\n" +  text_log.text
-	Globals.turns += 1	
-	run_move_animation()
-	text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + "\n" +  text_log.text
-	Globals.turns += 1
-
-func treasure_found_popup(popup_label, popup, popup_timer):
-	popup_label.text = "You found treasure!"
-	#popup.show()
-	popup.popup()
-	popup_timer.start()
-	#get_tree().paused = true
-
-func on_treasure_found(popup_label="", popup="", popup_timer=""):
-	text_log.text = "Turn " + str(Globals.turns) + ": Found treasure in tile " +  str(formatted_tile_label) + "\n" +  text_log.text
-	Globals.treasure_count += 1
-	emit_signal("treasure_found", Globals.treasure_count)
-	world_array.get(str(tile))['Times_Success'] += 1
-	if Globals.play_mode == "manual":
-		treasure_found_popup(popup_label, popup, popup_timer)
-	
-func on_treasure_not_found():
-	text_log.text = "Turn " + str(Globals.turns) + ": Didn't find treasure in tile " +  str(formatted_tile_label) + "\n" +  text_log.text
-
-func update_probabilities():
-	world_array.get(str(tile))['Prob_Observed'] = (
-				world_array.get(str(tile))['Times_Success'] / 
-				world_array.get(str(tile))['Times_Dug'] 
-			)
-	emit_signal("probabilities_updated", tile)
-
-func update_probabilities_with_lr(learning_rate):
-	var prev_estimate = world_array.get(str(tile))['Prob_Estimate']
-	
-	world_array.get(str(tile))['Prob_Estimate'] = ((Globals.agent_learning_rate *
-													0.0) +
-													(1.0-Globals.agent_learning_rate) *
-													 prev_estimate)
-	
-	world_array.get(str(tile))['Prob_Observed'] = world_array.get(str(tile))['Prob_Estimate']
-	
-	emit_signal("probabilities_updated", tile)
-
-
-func on_invalid_dig_location_clicked():
-	print("Can't click there, mate")
-	text_log.text = "Invalid digging location selected - select a tile on the island" + "\n" +  text_log.text
-
-func update_after_turn():
-	world_array.get(str(tile))['Times_Dug'] += 1
-	emit_signal("turn_taken", Globals.turns)
-	previous_tile = tile
-
-func on_final_turn():
-	Globals.final_world_prob_array = world_array
-	get_tree().change_scene("EndScene.tscn")
-	
-func digging_outcome(popup_label="none", popup="none", popup_timer="none"):
-	rand_float = randf()
-				
-	#print(rand_float)
-	#print(world_array.get(str(tile))['Prob'])
-				
-	if rand_float < world_array.get(str(tile))['Prob']:
-		on_treasure_found(popup_label, popup, popup_timer)
-	else:
-		on_treasure_not_found()
-
-func get_random_tile():
-	var tile_x = randi() % Globals.GridSizeX
-	var tile_y = randi() % Globals.GridSizeY
-	return Vector2(tile_x, tile_y)
-
-# Turn-taking logic
-func _input(event):		
-	if Globals.play_mode == "manual":
-		if (event.is_pressed() and event.button_index == BUTTON_LEFT):
-			if allow_click == true:
-				var popup = get_node("./Popup")
-				var popup_label = get_node("./Popup/YouFoundLabel")
-				var popup_timer = get_node("./Popup/DismissAutoTimer")
-				print("Clicked " + str(tile))
-				#print(world_array)
-				#print(world_array.get(str(tile)))
-				
-				if Globals.can_click:
-
-					if Globals.turns == 0:
-						first_turn_msg()
-					elif Globals.turns > 0 and previous_tile == tile:
-						dug_again_same_tile_msg()
-					elif Globals.turns == (Globals.max_turns-1) and previous_tile != tile:
-						penultimate_turn_invalid_selection_msg()
-					else:
-						move_tile_and_dig_msg()
-					
-					Globals.can_click = false
-					$ClickCooldownTimer.start()
-					
-					update_after_turn()	
-
-					# At the moment the sampling here doesn't use a random
-					# number generator with a seed set - I'm not sure how to pass
-					# in a rng from elsewhere, but can't set it up within the 
-					# input (with seed set) else we just get the same answer each time
-					# Is it worth seeding with the turn number for reproducibility?
-					# Or seed * turn number for some variation across seeds, at least?
-					
-					digging_outcome(popup_label, popup, popup_timer)
-					
-					update_probabilities()					
-					
-			else:
-				on_invalid_dig_location_clicked()
-				
-			
-			if Globals.turns == Globals.max_turns:
-				on_final_turn()
 	# Update this after 
-	elif Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
-
-		
+	
+	if Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
+		Globals.can_click = false
+			
 		# Select a random first tile
+		#if Globals.turns == 0:
 		tile = str(get_random_tile())
 		previous_tile = tile
 		first_turn_msg()
@@ -233,16 +92,18 @@ func _input(event):
 		if Globals.play_mode == "ai_simple":
 			update_probabilities()
 		else:
-			update_probabilities_with_lr(Globals.agent_learning_rate)
+			update_probabilities_with_lr()
 		#get_tree().paused = true
-		yield(get_tree().create_timer(ai_wait_length), "timeout")
+		ai_can_move = false
+		ai_move_cooldown_timer.start()
+		#yield(get_tree().create_timer(ai_wait_length), "timeout")
 		#get_tree().paused = false
-		
-		
-		
+
 		var exploit_or_explore = 0.0
 		
 		while Globals.turns <= Globals.max_turns:
+			ai_move_cooldown_timer.start()
+			yield(ai_move_cooldown_timer, "timeout")
 			# Use specified logic to decide what move to make
 			# Do move 
 			# increment turn
@@ -289,17 +150,177 @@ func _input(event):
 			if Globals.play_mode == "ai_simple":
 				update_probabilities()
 			else:
-				update_probabilities_with_lr(Globals.agent_learning_rate)
+				update_probabilities_with_lr()
 			#get_tree().paused = true
-			yield(get_tree().create_timer(ai_wait_length), "timeout")
+			#yield(get_tree().create_timer(ai_wait_length), "timeout")
 			#get_tree().paused = false
 		
 		on_final_turn()
+
+func _process(delta):
+	#t += delta * 0.4
+	if state == "move":
+		#print(sprite.position)
+		#print(chosen_tile_click)
+		destination = Vector2(int(chosen_tile_click[0])*32 + Globals.GridXStart*32, int(chosen_tile_click[1])*32 + Globals.GridYStart*32)
+		sprite.position = sprite.position.linear_interpolate(destination, delta*3.0)
+		if destination < sprite.position:
+			sprite.flip_h = true
+		else:
+			sprite.flip_h = false
+
+func _on_Timer_timeout():
+	Globals.can_click = true
+	
+func first_turn_msg():
+	run_move_animation()
+	text_log.text = "Turn " + str(Globals.turns) + ": The helicopter has dropped you off in tile " + str(formatted_tile_label) + " . Starting to dig..."  + "\n" +  text_log.text
+	Globals.turns += 1
+	sprite.visible = true
+
+func dug_again_same_tile_msg():
+	text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + " again"  + "\n" +  text_log.text
+	Globals.turns += 1
+
+func penultimate_turn_invalid_selection_msg():
+	text_log.text = "Can't move on penultimate turn - digging in same tile again instead."
+	tile = previous_tile
+	Globals.turns += 1
+	
+func move_tile_and_dig_msg():
+	text_log.text = "Turn " + str(Globals.turns) + ": Moved to new tile " + str(formatted_tile_label) + "\n" +  text_log.text
+	Globals.turns += 1	
+	run_move_animation()
+	text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + "\n" +  text_log.text
+	Globals.turns += 1
+
+func treasure_found_popup(popup_label, popup, popup_timer):
+	popup_label.text = "You found treasure!"
+	#popup.show()
+	popup.popup()
+	popup_timer.start()
+	#get_tree().paused = true
+
+func on_treasure_found(popup_label="", popup="", popup_timer=""):
+	text_log.text = "Turn " + str(Globals.turns) + ": Found treasure in tile " +  str(formatted_tile_label) + "\n" +  text_log.text
+	Globals.treasure_count += 1
+	emit_signal("treasure_found", Globals.treasure_count)
+	world_array.get(str(tile))['Times_Success'] += 1
+	if Globals.play_mode == "manual":
+		treasure_found_popup(popup_label, popup, popup_timer)
+	
+func on_treasure_not_found():
+	text_log.text = "Turn " + str(Globals.turns) + ": Didn't find treasure in tile " +  str(formatted_tile_label) + "\n" +  text_log.text
+
+func update_probabilities():
+	world_array.get(str(tile))['Prob_Observed'] = (
+				world_array.get(str(tile))['Times_Success'] / 
+				world_array.get(str(tile))['Times_Dug'] 
+			)
+	emit_signal("probabilities_updated", tile)
+
+func update_probabilities_with_lr():
+	var prev_estimate = world_array.get(str(tile))['Prob_Estimate']
+	
+	world_array.get(str(tile))['Prob_Estimate'] = ((Globals.agent_learning_rate *
+													0.0) +
+													(1.0-Globals.agent_learning_rate) *
+													 prev_estimate)
+	
+	world_array.get(str(tile))['Prob_Observed'] = world_array.get(str(tile))['Prob_Estimate']
+	
+	emit_signal("probabilities_updated", tile)
+
+func on_invalid_dig_location_clicked():
+	print("Can't click there, mate")
+	text_log.text = "Invalid digging location selected - select a tile on the island" + "\n" +  text_log.text
+
+func update_after_turn():
+	world_array.get(str(tile))['Times_Dug'] += 1
+	emit_signal("turn_taken", Globals.turns)
+	previous_tile = tile
+
+func on_final_turn():
+	Globals.final_world_prob_array = world_array
+	get_tree().change_scene("EndScene.tscn")
+	
+func digging_outcome(popup_label="none", popup="none", popup_timer="none"):
+	rand_float = randf()
+				
+	#print(rand_float)
+	#print(world_array.get(str(tile))['Prob'])
+				
+	if rand_float < world_array.get(str(tile))['Prob']:
+		on_treasure_found(popup_label, popup, popup_timer)
+		return true
+	else:
+		on_treasure_not_found()
+		return false
+
+func get_random_tile():
+	var tile_x = randi() % Globals.GridSizeX
+	var tile_y = randi() % Globals.GridSizeY
+	return Vector2(tile_x, tile_y)
+
+# Turn-taking logic for manual play
+func _input(event):		
+	if Globals.play_mode == "manual":
+		if (event.is_pressed() and event.button_index == BUTTON_LEFT):
+			if allow_click == true:
+				var popup = get_node("./Popup")
+				var popup_label = get_node("./Popup/YouFoundLabel")
+				var popup_timer = get_node("./Popup/DismissAutoTimer")
+				print("Clicked " + str(tile))
+				#print(world_array)
+				#print(world_array.get(str(tile)))
+				
+				if Globals.can_click:
+
+					if Globals.turns == 0:
+						first_turn_msg()
+					elif Globals.turns > 0 and previous_tile == tile:
+						dug_again_same_tile_msg()
+					elif Globals.turns == (Globals.max_turns-1) and previous_tile != tile:
+						penultimate_turn_invalid_selection_msg()
+					else:
+						move_tile_and_dig_msg()
+					
+					Globals.can_click = false
+					
+					update_after_turn()	
+
+					# At the moment the sampling here doesn't use a random
+					# number generator with a seed set - I'm not sure how to pass
+					# in a rng from elsewhere, but can't set it up within the 
+					# input (with seed set) else we just get the same answer each time
+					# Is it worth seeding with the turn number for reproducibility?
+					# Or seed * turn number for some variation across seeds, at least?
+					
+					outcome_var = digging_outcome(popup_label, popup, popup_timer)
+					
+					if previous_tile == tile and outcome_var:
+						click_cooldown_timer.wait_time = popup_timer.wait_time
+					elif previous_tile == tile:
+						click_cooldown_timer.wait_time = 0.1
+					else:
+						click_cooldown_timer.wait_time = 1.5
+					click_cooldown_timer.start()
+					
+					update_probabilities()					
+					
+			else:
+				on_invalid_dig_location_clicked()
+				
+			
+			if Globals.turns == Globals.max_turns:
+				on_final_turn()
+	
 			
 		
-	
-		
-
 
 func _on_ClickCooldownTimer_timeout():
 	Globals.can_click = true
+
+
+func _on_AiMoveCooldownTimer_timeout():
+	ai_can_move = true

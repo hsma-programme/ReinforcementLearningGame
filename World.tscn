@@ -188,6 +188,7 @@ margin_left = 71.0
 margin_top = 38.0
 margin_right = 221.0
 margin_bottom = 67.0
+rect_pivot_offset = Vector2( 43, 9 )
 theme = ExtResource( 16 )
 custom_fonts/font = SubResource( 8 )
 text = "ABCDE"
@@ -218,6 +219,20 @@ margin_bottom = 310.0
 
 [node name="ConfirmReturnHomeDialog" parent="ReturnToHomeButton" index="0"]
 visible = false
+
+[node name="ScaleGradientRect" type="TextureRect" parent="."]
+margin_left = 273.0
+margin_top = 283.0
+margin_right = 411.0
+margin_bottom = 298.0
+expand = true
+
+[node name="Label" type="Label" parent="."]
+margin_left = 270.0
+margin_top = 299.0
+margin_right = 446.0
+margin_bottom = 313.0
+text = "0   0.2  0.4  0.6  0.8   1"
 
 [connection signal="world_prob_array_created" from="." to="Player" method="_on_World_world_prob_array_created"]
 [connection signal="current_tile_signal" from="SelectTilemap" to="LabelControl" method="_on_SelectTilemap_current_tile_signal"]

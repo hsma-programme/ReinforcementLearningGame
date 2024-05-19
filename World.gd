@@ -6,6 +6,19 @@ extends Node2D
 onready var selectTilemap = $SelectTilemap
 var world_prob_array = {} 
 
+onready var gradientScaleRect = $ScaleGradientRect
+
+# https://www.reddit.com/r/godot/comments/telp85/how_to_create_a_gradient_via_script/
+#var gradient_data := {
+#    0.0: Color.red,
+#    0.5: Color.green,
+#    0.75: Color.violet,
+#    1.0: Color.blue,
+#}
+
+
+
+
 # https://www.reddit.com/r/godot/comments/b6wn9j/creating_a_gradient_instance_in_a_script/
 # Set grid colors based on observed probability
 var colors = Globals.colors
@@ -26,6 +39,7 @@ func _ready():
 	#print(world_prob_array)
 
 	emit_signal("world_prob_array_created", world_prob_array)
+	Globals.initial_world_prob_array = world_prob_array
 	
 	var idx = 0.0
 	var step = Globals.color_step
@@ -34,6 +48,12 @@ func _ready():
 		colors.add_point(idx, color)
 		idx = min(idx + step, .999) 
 		# setting a color at point 1.0 failed to add it correctly to the end of the gradient
+		
+	var gradient_texture = GradientTexture.new()
+	gradient_texture.gradient = colors
+	gradient_texture.width = 200
+	
+	gradientScaleRect.texture = gradient_texture
 	
 	var margin_left = 0
 	var margin_top = 0

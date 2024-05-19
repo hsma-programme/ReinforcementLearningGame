@@ -30,6 +30,8 @@ var colors = Gradient.new()
 var colors_array = [Color(0, 0, .9, 0.3), Color(.5, 0, 0, 0.6), Color(.9, 0, 0, 0.8)]
 var color_step = 1.0 / (len(colors_array) - 1)
 
+var initial_world_prob_array = {}
+
 var final_world_prob_array = {}
 
 var play_speed = 3
