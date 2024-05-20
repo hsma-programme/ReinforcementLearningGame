@@ -3,6 +3,8 @@ extends Node2D
 var allow_click = false
 var tile = Vector2.ZERO
 
+var tile_str = ""
+
 var outcome_var = false
 
 var rand_float = 0.0
@@ -22,7 +24,10 @@ var ai_can_move = true
 
 onready var sprite = $RobotSprite
 
+var colnames = ["A", "B", "C", "D", "E", "F"]
 var formatted_tile_label = "Z9"
+
+var tile_vec = Vector2.ZERO
 
 var chosen_tile_click = Vector2.ZERO
 var previous_tile = Vector2.ZERO
@@ -38,85 +43,7 @@ signal probabilities_updated
 
 var found_popup_scene = preload("res://Popups/YouFoundPopup.tscn")
 
-func _on_World_world_prob_array_created(value):
-	world_array = value
-	if Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
-		Globals.can_click = false
-			
-		# Select a random first tile
-		#if Globals.turns == 0:
-		tile = str(get_random_tile())
-		previous_tile = tile
-		first_turn_msg()
-		update_after_turn()	
-		digging_outcome()
-		if Globals.play_mode == "ai_simple":
-			update_probabilities()
-		else:
-			update_probabilities_with_lr()
-		#get_tree().paused = true
-		ai_can_move = false
-		ai_move_cooldown_timer.start()
-		#yield(get_tree().create_timer(ai_wait_length), "timeout")
-		#get_tree().paused = false
 
-		var exploit_or_explore = 0.0
-		
-		while Globals.turns <= Globals.max_turns:
-			ai_move_cooldown_timer.start()
-			yield(ai_move_cooldown_timer, "timeout")
-			# Use specified logic to decide what move to make
-			# Do move 
-			# increment turn
-			# return to start of while loop
-			# Begins by random sample between 0 and 1
-			# if lower than exploitation rate, will find the highest estimated location
-			# simple solution for ties - just take the first in the list
-			# if sample is higher than explitation rate, will choose a random 
-			# location and go there
-			# add a timer while the AI 'thinks', then next turn
-			exploit_or_explore = randf()
-			
-			if exploit_or_explore < Globals.agent_exploitation_rate:
-				# Exploit
-				# Find highest rate and go there
-				text_log.text = "Turn " + str(Globals.turns) + ": Exploit!\n" +  text_log.text
-				
-				var current_highest_cell = Vector2.ZERO
-				var current_highest_prob = 0.0
-				var cell_prob_observed = 0.0
-				for cell in world_array.keys():				
-					cell_prob_observed = world_array.get(str(cell))['Prob_Observed']
-					if cell_prob_observed > current_highest_prob:
-						current_highest_prob = cell_prob_observed
-						current_highest_cell = cell
-				
-				tile = str(current_highest_cell)
-				
-			else:
-				# Explore
-				# Choose random tile and go there
-				text_log.text = "Turn " + str(Globals.turns) + ": Explore!\n" +  text_log.text
-				tile = str(get_random_tile())
-			
-			if Globals.turns > 0 and previous_tile == tile:
-				dug_again_same_tile_msg()
-			elif Globals.turns == (Globals.max_turns-1) and previous_tile != tile:
-				penultimate_turn_invalid_selection_msg()
-			else:
-				move_tile_and_dig_msg()
-				
-			update_after_turn()	
-			digging_outcome()
-			if Globals.play_mode == "ai_simple":
-				update_probabilities()
-			else:
-				update_probabilities_with_lr()
-			#get_tree().paused = true
-			#yield(get_tree().create_timer(ai_wait_length), "timeout")
-			#get_tree().paused = false
-		
-		on_final_turn()
 
 func _on_LabelControl_formatted_tile_label_signal(value):
 	formatted_tile_label = value
@@ -172,14 +99,22 @@ func _process(delta):
 
 func _on_Timer_timeout():
 	Globals.can_click = true
-	
-func first_turn_msg():
+
+func format_tile_label(tile_coords):
+	return str(colnames[tile_coords[0]]) + \
+				str(tile_coords[1] + 1)
+
+func first_turn_msg(tile=Vector2.ZERO):
+	if Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
+		formatted_tile_label = format_tile_label(tile)
 	run_move_animation()
 	text_log.text = "Turn " + str(Globals.turns) + ": The helicopter has dropped you off in tile " + str(formatted_tile_label) + " . Starting to dig..."  + "\n" +  text_log.text
 	Globals.turns += 1
 	sprite.visible = true
 
-func dug_again_same_tile_msg():
+func dug_again_same_tile_msg(tile=Vector2.ZERO):
+	if Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
+		formatted_tile_label = format_tile_label(tile)
 	text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + " again"  + "\n" +  text_log.text
 	Globals.turns += 1
 
@@ -188,7 +123,10 @@ func penultimate_turn_invalid_selection_msg():
 	tile = previous_tile
 	Globals.turns += 1
 	
-func move_tile_and_dig_msg():
+func move_tile_and_dig_msg(tile=Vector2.ZERO):
+	if Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
+		formatted_tile_label = format_tile_label(tile)
+	
 	text_log.text = "Turn " + str(Globals.turns) + ": Moved to new tile " + str(formatted_tile_label) + "\n" +  text_log.text
 	Globals.turns += 1	
 	run_move_animation()
@@ -202,7 +140,9 @@ func treasure_found_popup(popup_label, popup, popup_timer):
 	popup_timer.start()
 	#get_tree().paused = true
 
-func on_treasure_found(popup_label="", popup="", popup_timer=""):
+func on_treasure_found(popup_label="", popup="", popup_timer="", tile=Vector2.ZERO):
+	if Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
+		formatted_tile_label = format_tile_label(tile)
 	text_log.text = "Turn " + str(Globals.turns) + ": Found treasure in tile " +  str(formatted_tile_label) + "\n" +  text_log.text
 	Globals.treasure_count += 1
 	emit_signal("treasure_found", Globals.treasure_count)
@@ -210,7 +150,9 @@ func on_treasure_found(popup_label="", popup="", popup_timer=""):
 	if Globals.play_mode == "manual":
 		treasure_found_popup(popup_label, popup, popup_timer)
 	
-func on_treasure_not_found():
+func on_treasure_not_found(tile=Vector2.ZERO):
+	if Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
+		formatted_tile_label = format_tile_label(tile)
 	text_log.text = "Turn " + str(Globals.turns) + ": Didn't find treasure in tile " +  str(formatted_tile_label) + "\n" +  text_log.text
 
 func update_probabilities():
@@ -252,17 +194,110 @@ func digging_outcome(popup_label="none", popup="none", popup_timer="none"):
 	#print(world_array.get(str(tile))['Prob'])
 				
 	if rand_float < world_array.get(str(tile))['Prob']:
-		on_treasure_found(popup_label, popup, popup_timer)
+		on_treasure_found(popup_label, popup, popup_timer, tile)
 		return true
 	else:
-		on_treasure_not_found()
+		on_treasure_not_found(tile)
 		return false
 
 func get_random_tile():
-	var tile_x = randi() % Globals.GridSizeX
-	var tile_y = randi() % Globals.GridSizeY
+	var tile_x = randi() % (Globals.GridSizeX)
+	var tile_y = randi() % (Globals.GridSizeY)
+	print("Random Tile Selected: (" + str(tile_x) + ", " + str(tile_y) + ")")
 	return Vector2(tile_x, tile_y)
 
+func _on_World_world_prob_array_created(value):
+	world_array = value
+	if Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
+		Globals.can_click = false
+		#self.visible = false
+			
+		# Select a random first tile
+		#if Globals.turns == 0:
+		tile = get_random_tile()
+		tile_str = str(tile)	
+		previous_tile = tile
+		
+		first_turn_msg(tile)
+		update_after_turn()	
+		digging_outcome()
+		if Globals.play_mode == "ai_simple":
+			update_probabilities()
+		else:
+			update_probabilities_with_lr()
+		#get_tree().paused = true
+		ai_can_move = false
+		ai_move_cooldown_timer.start()
+		#yield(get_tree().create_timer(ai_wait_length), "timeout")
+		#get_tree().paused = false
+
+		var exploit_or_explore = 0.0
+			
+		while Globals.turns <= Globals.max_turns:
+			ai_move_cooldown_timer.start()
+			yield(ai_move_cooldown_timer, "timeout")
+			# Use specified logic to decide what move to make
+			# Do move 
+			# increment turn
+			# return to start of while loop
+			# Begins by random sample between 0 and 1
+			# if lower than exploitation rate, will find the highest estimated location
+			# simple solution for ties - just take the first in the list
+			# if sample is higher than explitation rate, will choose a random 
+			# location and go there
+			# add a timer while the AI 'thinks', then next turn
+			exploit_or_explore = randf()
+			print("Sampled " + str(exploit_or_explore) + " vs exploitation rate of " + str(Globals.agent_exploitation_rate))
+			
+
+			if exploit_or_explore < Globals.agent_exploitation_rate:
+				# Exploit
+				# Find highest rate and go there
+				text_log.text = "Turn " + str(Globals.turns) + ": Exploit!\n" +  text_log.text
+				
+				var current_highest_cell = Vector2.ZERO
+				var current_highest_prob = 0.0
+				var cell_prob_observed = 0.0
+
+				for cell in world_array.keys():				
+					cell_prob_observed = world_array[str(cell)]['Prob_Observed']
+					if cell_prob_observed > current_highest_prob:
+						current_highest_cell = Vector2(cell[1], cell[4])
+						current_highest_prob = cell_prob_observed
+				
+				#current_highest_cell = Vector2(current_highest_cell[0], current_highest_cell[1])
+				
+				print("Exploiting current highest cell: " + str(current_highest_cell) + " (prob " + str(current_highest_prob) + ")")
+				
+				tile = current_highest_cell
+				
+			else:
+				# Explore
+				# Choose random tile and go there
+				text_log.text = "Turn " + str(Globals.turns) + ": Explore!\n" +  text_log.text
+				tile = get_random_tile()
+				tile_str = str(tile_vec)
+			
+			if Globals.turns > 0 and previous_tile == tile:
+				dug_again_same_tile_msg(tile)
+			elif Globals.turns == (Globals.max_turns-1) and previous_tile != tile:
+				penultimate_turn_invalid_selection_msg()
+			else:
+				move_tile_and_dig_msg(tile)
+				
+			update_after_turn()	
+			digging_outcome()
+			
+			if Globals.play_mode == "ai_simple":
+				update_probabilities()
+			else:
+				update_probabilities_with_lr()
+			#get_tree().paused = true
+			#yield(get_tree().create_timer(ai_wait_length), "timeout")
+			#get_tree().paused = false
+		
+		on_final_turn()
+	
 # Turn-taking logic for manual play
 func _input(event):		
 	if Globals.play_mode == "manual":
