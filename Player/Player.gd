@@ -95,7 +95,7 @@ func _process(delta):
 	#if state == "move":
 	destination = Vector2(int(chosen_tile_click[0])*32 + Globals.GridXStart*32, int(chosen_tile_click[1])*32 + Globals.GridYStart*32)
 	
-	print(sprite.position.distance_to(destination))
+	#print(sprite.position.distance_to(destination))
 	
 	if sprite.position.distance_to(destination) > 2 : 
 		sprite.play("Walk")
