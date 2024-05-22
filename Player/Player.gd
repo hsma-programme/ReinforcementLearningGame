@@ -126,6 +126,7 @@ func first_turn_msg(tile=Vector2.ZERO):
 	run_move_animation()
 	text_log.text = "Turn " + str(Globals.turns) + ": The helicopter has dropped you off in tile " + str(formatted_tile_label) + " . Starting to dig..."  + "\n" +  text_log.text
 	Globals.turns += 1
+	Globals.times_dug += 1
 	sprite.visible = true
 
 func dug_again_same_tile_msg(tile=Vector2.ZERO):
@@ -253,7 +254,7 @@ func _on_World_world_prob_array_created(value):
 
 		var exploit_or_explore = 0.0
 			
-		while Globals.turns <= Globals.max_turns:
+		while Globals.turns < Globals.max_turns:
 			ai_move_cooldown_timer.start()
 			yield(ai_move_cooldown_timer, "timeout")
 			# Use specified logic to decide what move to make
