@@ -43,7 +43,8 @@ signal probabilities_updated
 
 var found_popup_scene = preload("res://Popups/YouFoundPopup.tscn")
 
-
+func _on_ReturnToHomeButton_button_down():
+	sprite.play("Idle")
 
 func _on_LabelControl_formatted_tile_label_signal(value):
 	formatted_tile_label = value
@@ -62,12 +63,13 @@ func _on_SelectTilemap_tile_in_diggable_limits(value):
 var t = 0.0
 
 func run_move_animation():
-	state = "move"
+	
+	#state = "move"
 	chosen_tile_click = tile
-	sprite.play("Walk")
-	yield(get_tree().create_timer(ai_wait_length), "timeout")
-	state = "idle"
-	sprite.play("Idle")
+	#sprite.play("Walk")
+	#yield(get_tree().create_timer(ai_wait_length), "timeout")
+	#state = "idle"
+	#sprite.play("Idle")
 
 func _ready():
 	sprite.visible = false
@@ -87,15 +89,26 @@ func _ready():
 
 func _process(delta):
 	#t += delta * 0.4
-	if state == "move":
+	#if state == "move":
+	destination = Vector2(int(chosen_tile_click[0])*32 + Globals.GridXStart*32, int(chosen_tile_click[1])*32 + Globals.GridYStart*32)
+	
+	print(sprite.position.distance_to(destination))
+	
+	if sprite.position.distance_to(destination) > 2 : 
+		sprite.play("Walk")
+		sprite.position = sprite.position.linear_interpolate(destination, delta*3.0 *float(Globals.play_speed))
+		#state = "move"
 		#print(sprite.position)
 		#print(chosen_tile_click)
-		destination = Vector2(int(chosen_tile_click[0])*32 + Globals.GridXStart*32, int(chosen_tile_click[1])*32 + Globals.GridYStart*32)
-		sprite.position = sprite.position.linear_interpolate(destination, delta*3.0)
+		#print("position:" + str(sprite.position))
+		#print("destination:" + str(destination))
 		if destination < sprite.position:
 			sprite.flip_h = true
 		else:
 			sprite.flip_h = false
+	else:
+		#state == "idle"
+		sprite.play("Idle")
 
 func _on_Timer_timeout():
 	Globals.can_click = true

@@ -34,7 +34,7 @@ var initial_world_prob_array = {}
 
 var final_world_prob_array = {}
 
-var play_speed = 3
+var play_speed = 1
 
 func get_wait(play_speed):
 	var ai_wait_duration = 0.0
