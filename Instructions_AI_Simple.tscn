@@ -76,6 +76,6 @@ step = 0.01
 value = 0.9
 
 [connection signal="button_down" from="Button" to="." method="_on_Button_button_down"]
-[connection signal="value_changed" from="PlaySpeed" to="." method="_on_PlaySpeed_value_changed"]
 [connection signal="value_changed" from="PlaySpeed" to="." method="_on_HSlider_value_changed"]
+[connection signal="value_changed" from="PlaySpeed" to="." method="_on_PlaySpeed_value_changed"]
 [connection signal="value_changed" from="ExploitationRate" to="." method="_on_ExploitationRate_value_changed"]

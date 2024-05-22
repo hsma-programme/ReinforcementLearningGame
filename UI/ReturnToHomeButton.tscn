@@ -27,5 +27,6 @@ dialog_text = "Return to the title screen?"
 script = ExtResource( 2 )
 
 [connection signal="button_down" from="." to="." method="_on_ReturnToHomeButton_button_down"]
+[connection signal="about_to_show" from="ConfirmReturnHomeDialog" to="ConfirmReturnHomeDialog" method="_on_ConfirmReturnHomeDialog_about_to_show"]
 [connection signal="confirmed" from="ConfirmReturnHomeDialog" to="ConfirmReturnHomeDialog" method="_on_ConfirmReturnHomeDialog_confirmed"]
 [connection signal="popup_hide" from="ConfirmReturnHomeDialog" to="ConfirmReturnHomeDialog" method="_on_ConfirmReturnHomeDialog_popup_hide"]

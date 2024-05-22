@@ -7,8 +7,11 @@ var colors = Globals.colors
 var colors_array = Globals.colors_array
 
 onready var treasureLabel = $TreasureLabel
+onready var AILabel = $AIDetails
 
 var observed_estimated_label = ""
+
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -44,8 +47,12 @@ func _ready():
 		lab.rect_position = Vector2(margin_left, margin_top)
 		lab.rect_size = Vector2(cell_size*.9,cell_size*.9)
 		if world_prob_array.get(str(cell))['Times_Dug'] == 0.0:
-			lab.text = "Not\nExplored!" + "\n\nActual:" +  str(world_prob_array.get(str(cell))['Prob']) + "\n"
-			x.color = Color(0, .5, 0, 0.25)
+			if Globals.play_mode == "ai_simple" or Globals.play_mode == "manual":
+				lab.text = "Not\nExplored!" + "\n\nActual:" +  str(world_prob_array.get(str(cell))['Prob']) + "\n"
+				x.color = Color(0, .5, 0, 0.25)
+			else:
+				lab.text = "Not\nExplored!\n\n" + observed_estimated_label + str(stepify(world_prob_array.get(str(cell))['Prob_Estimate'],0.01)) + "\n\nActual:" +  str(world_prob_array.get(str(cell))['Prob']) + "\n"
+				x.color = Color(0, .5, 0, 0.25)
 		else:
 			lab.text = observed_estimated_label + str(stepify(world_prob_array.get(str(cell))['Prob_Observed'],0.01)) + "\n\nActual: " +  str(world_prob_array.get(str(cell))['Prob']) + "\n\nTimes Dug: " + str(world_prob_array.get(str(cell))['Times_Dug'])
 			x.color = colors.interpolate(clamp(world_prob_array[str(cell)]['Prob_Observed'], 0.01, 0.99))
@@ -64,7 +71,7 @@ func _ready():
 		var lab = Label.new()
 		x.name = str(cell + "_actual")
 		margin_left = (int(cell[1])*16)+340+2
-		margin_top = (int(cell[4])*16)+64+2
+		margin_top = (int(cell[4])*16)+84+2
 		x.rect_position = Vector2(margin_left, margin_top)
 		x.rect_size = Vector2(14,14)
 		x.color = colors.interpolate(clamp(world_prob_array[str(cell)]['Prob'], 0.01, 0.99))
@@ -83,7 +90,7 @@ func _ready():
 		var lab = Label.new()
 		x.name = str(cell + "_actual")
 		margin_left = (int(cell[1])*16)+340+2
-		margin_top = (int(cell[4])*16)+190+2
+		margin_top = (int(cell[4])*16)+210+2
 		x.rect_position = Vector2(margin_left, margin_top)
 		x.rect_size = Vector2(14,14)
 		lab.rect_position = Vector2(margin_left-1, margin_top-1)
@@ -101,3 +108,10 @@ func _ready():
 
 	treasureLabel.text += str(Globals.treasure_count) + " pieces"
 	# Add variable tracking times moved and times dug (exploit/explore measure of some kind)
+	
+	AILabel.text = "Times Moved: " + str(Globals.times_moved) + "\nTimes Dug: " + str(Globals.times_dug)
+	
+	if Globals.play_mode == "ai_simple":
+		AILabel.text += "\nExploitation Rate: " + str(Globals.agent_exploitation_rate)
+	elif Globals.play_mode == "ai_advanced":
+		AILabel.text += "\nExploitation Rate: " + str(Globals.agent_exploitation_rate) + "\nAgent Learning Rate: " + str(Globals.agent_learning_rate)

@@ -80,6 +80,9 @@ func _ready():
 	
 	print("Wait length: " + str(ai_wait_length))
 	ai_move_cooldown_timer.wait_time = ai_wait_length
+	
+	if Globals.play_mode != "ai_simple" and Globals.play_mode != "ai_advanced": 
+		Globals.play_speed = 1
 	#text_log.add_color_override("font_color_selected", Color(0,0,0,0))
 	#var current_seed = Globals.random_seed_selected
 	#rng.seed = hash(str(current_seed))
@@ -130,11 +133,13 @@ func dug_again_same_tile_msg(tile=Vector2.ZERO):
 		formatted_tile_label = format_tile_label(tile)
 	text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + " again"  + "\n" +  text_log.text
 	Globals.turns += 1
+	Globals.times_dug += 1
 
 func penultimate_turn_invalid_selection_msg():
 	text_log.text = "Can't move on penultimate turn - digging in same tile again instead."
 	tile = previous_tile
 	Globals.turns += 1
+	Globals.times_dug += 1
 	
 func move_tile_and_dig_msg(tile=Vector2.ZERO):
 	if Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
@@ -142,9 +147,11 @@ func move_tile_and_dig_msg(tile=Vector2.ZERO):
 	
 	text_log.text = "Turn " + str(Globals.turns) + ": Moved to new tile " + str(formatted_tile_label) + "\n" +  text_log.text
 	Globals.turns += 1	
+	Globals.times_moved += 1
 	run_move_animation()
 	text_log.text = "Turn " + str(Globals.turns) + ": Dug in tile " + str(formatted_tile_label) + "\n" +  text_log.text
 	Globals.turns += 1
+	Globals.times_dug += 1
 
 func treasure_found_popup(popup_label, popup, popup_timer):
 	popup_label.text = "You found treasure!"
@@ -272,11 +279,18 @@ func _on_World_world_prob_array_created(value):
 				var current_highest_prob = 0.0
 				var cell_prob_observed = 0.0
 
-				for cell in world_array.keys():				
-					cell_prob_observed = world_array[str(cell)]['Prob_Observed']
-					if cell_prob_observed > current_highest_prob:
-						current_highest_cell = Vector2(cell[1], cell[4])
-						current_highest_prob = cell_prob_observed
+				if Globals.play_mode == "ai_simple":
+					for cell in world_array.keys():				
+						cell_prob_observed = world_array[str(cell)]['Prob_Observed']
+						if cell_prob_observed > current_highest_prob:
+							current_highest_cell = Vector2(cell[1], cell[4])
+							current_highest_prob = cell_prob_observed
+				elif Globals.play_mode == "ai_advanced":
+					for cell in world_array.keys():				
+						cell_prob_observed = world_array[str(cell)]['Prob_Estimate']
+						if cell_prob_observed > current_highest_prob:
+							current_highest_cell = Vector2(cell[1], cell[4])
+							current_highest_prob = cell_prob_observed
 				
 				#current_highest_cell = Vector2(current_highest_cell[0], current_highest_cell[1])
 				

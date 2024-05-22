@@ -4,6 +4,8 @@ var random_seed_selected = 42
 var turns = 0
 var max_turns = 200
 var treasure_count = 0
+var times_moved = 0
+var times_dug = 0
 
 var play_mode = "none"
 

@@ -5,6 +5,8 @@ onready var choose_ai_mode_popup = $PopupMenuAIMode
 func _ready():
 	Globals.random_seed_selected = 42
 	Globals.turns = 0
+	Globals.times_moved = 0
+	Globals.times_dug = 0
 
 func _on_ManualPlayButton_pressed():
 	get_tree().change_scene("Instructions.tscn")
