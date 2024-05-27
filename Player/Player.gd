@@ -78,11 +78,11 @@ func _ready():
 	var youfound_popup = found_popup_scene.instance()
 	add_child(youfound_popup)
 	
+
+	
 	print("Wait length: " + str(ai_wait_length))
 	ai_move_cooldown_timer.wait_time = ai_wait_length
 	
-	if Globals.play_mode != "ai_simple" and Globals.play_mode != "ai_advanced": 
-		Globals.play_speed = 1
 	#text_log.add_color_override("font_color_selected", Color(0,0,0,0))
 	#var current_seed = Globals.random_seed_selected
 	#rng.seed = hash(str(current_seed))
@@ -91,6 +91,12 @@ func _ready():
 	
 
 func _process(delta):
+	var movement_speed_multiplier = 1
+	
+	if Globals.play_mode == "manual":
+		movement_speed_multiplier = 1
+	else:
+		movement_speed_multiplier = Globals.play_speed
 	#t += delta * 0.4
 	#if state == "move":
 	destination = Vector2(int(chosen_tile_click[0])*32 + Globals.GridXStart*32, int(chosen_tile_click[1])*32 + Globals.GridYStart*32)
@@ -99,7 +105,7 @@ func _process(delta):
 	
 	if sprite.position.distance_to(destination) > 2 : 
 		sprite.play("Walk")
-		sprite.position = sprite.position.linear_interpolate(destination, delta*3.0 *float(Globals.play_speed))
+		sprite.position = sprite.position.linear_interpolate(destination, delta*3.0 *float(movement_speed_multiplier))
 		#state = "move"
 		#print(sprite.position)
 		#print(chosen_tile_click)

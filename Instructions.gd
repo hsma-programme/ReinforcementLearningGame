@@ -6,8 +6,6 @@ func _ready():
 		$ExploitationRate.value = Globals.agent_exploitation_rate
 		$PlaySpeed.value = Globals.play_speed
 		$LearningRate.value = Globals.agent_learning_rate
-	else:
-		Globals.play_speed = 1
 
 func _on_Button_button_down():
 	get_tree().change_scene("World.tscn")

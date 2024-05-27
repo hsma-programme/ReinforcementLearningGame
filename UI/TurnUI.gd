@@ -19,6 +19,8 @@ func _on_Player_turn_taken(value):
 	#if label != null:
 	#	label.text = "HP = " + str(hearts)
 	if turnUIBar != null:
+		# 88.0 just seems to roughly work for current size of turn bar
+		# using rect_size.x of turn bar base leads to incorrect behaviour
 		turnUIBar.rect_size.x = (88.0 / Globals.max_turns) * turns_taken
 		#print(turnUIBar.rect_size.x)
 	
