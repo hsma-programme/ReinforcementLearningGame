@@ -19,7 +19,7 @@ func _on_Player_turn_taken(value):
 	#if label != null:
 	#	label.text = "HP = " + str(hearts)
 	if turnUIBar != null:
-		turnUIBar.rect_size.x = (130.0 / Globals.max_turns) * turns_taken
+		turnUIBar.rect_size.x = (88.0 / Globals.max_turns) * turns_taken
 		#print(turnUIBar.rect_size.x)
 	
 	turnLabel.text = "Turns: " + str(turns_taken) + " / " + str(Globals.max_turns)
