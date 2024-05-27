@@ -15,7 +15,7 @@ var observed_estimated_label = ""
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if Globals.play_mode == "manual" or Globals.play_mode == "ai_simple":
+	if Globals.play_mode == "manual":
 		observed_estimated_label = "Observed: " 
 	else:
 		observed_estimated_label = "Estimated: "
@@ -47,7 +47,7 @@ func _ready():
 		lab.rect_position = Vector2(margin_left, margin_top)
 		lab.rect_size = Vector2(cell_size*.9,cell_size*.9)
 		if world_prob_array.get(str(cell))['Times_Dug'] == 0.0:
-			if Globals.play_mode == "ai_simple" or Globals.play_mode == "manual":
+			if Globals.play_mode == "manual":
 				lab.text = "Not\nExplored!" + "\n\nActual:" +  str(world_prob_array.get(str(cell))['Prob']) + "\n"
 				x.color = Color(0, .5, 0, 0.25)
 			else:

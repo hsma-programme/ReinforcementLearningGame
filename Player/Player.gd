@@ -182,6 +182,17 @@ func update_probabilities():
 				world_array.get(str(tile))['Times_Dug'] 
 			)
 	emit_signal("probabilities_updated", tile)
+	
+func update_probabilities_simple_ai():
+	
+	world_array.get(str(tile))['Prob_Estimate'] = (
+				world_array.get(str(tile))['Times_Success'] / 
+				world_array.get(str(tile))['Times_Dug'] 
+			)
+			
+	world_array.get(str(tile))['Prob_Observed'] = world_array.get(str(tile))['Prob_Estimate']
+	
+	emit_signal("probabilities_updated", tile)
 
 func update_probabilities_with_lr():
 	var prev_estimate = world_array.get(str(tile))['Prob_Estimate']
@@ -243,7 +254,7 @@ func _on_World_world_prob_array_created(value):
 		update_after_turn()	
 		digging_outcome()
 		if Globals.play_mode == "ai_simple":
-			update_probabilities()
+			update_probabilities_simple_ai()
 		else:
 			update_probabilities_with_lr()
 		#get_tree().paused = true
@@ -280,15 +291,9 @@ func _on_World_world_prob_array_created(value):
 				var current_highest_prob = 0.0
 				var cell_prob_observed = 0.0
 
-				if Globals.play_mode == "ai_simple":
+				if Globals.play_mode == "ai_simple" or Globals.play_mode == "ai_advanced":
 					for cell in world_array.keys():				
-						cell_prob_observed = world_array[str(cell)]['Prob_Observed']
-						if cell_prob_observed > current_highest_prob:
-							current_highest_cell = Vector2(cell[1], cell[4])
-							current_highest_prob = cell_prob_observed
-				elif Globals.play_mode == "ai_advanced":
-					for cell in world_array.keys():				
-						cell_prob_observed = world_array[str(cell)]['Prob_Estimate']
+						cell_prob_observed = world_array.get(str(cell))['Prob_Estimate']
 						if cell_prob_observed > current_highest_prob:
 							current_highest_cell = Vector2(cell[1], cell[4])
 							current_highest_prob = cell_prob_observed
@@ -317,7 +322,7 @@ func _on_World_world_prob_array_created(value):
 			digging_outcome()
 			
 			if Globals.play_mode == "ai_simple":
-				update_probabilities()
+				update_probabilities_simple_ai()
 			else:
 				update_probabilities_with_lr()
 			#get_tree().paused = true
