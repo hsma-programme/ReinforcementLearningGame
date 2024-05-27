@@ -40,6 +40,7 @@ var destination = Vector2.ZERO
 signal treasure_found
 signal turn_taken
 signal probabilities_updated
+signal ai_selected_tile
 
 var found_popup_scene = preload("res://Popups/YouFoundPopup.tscn")
 
@@ -253,6 +254,7 @@ func _on_World_world_prob_array_created(value):
 		# Select a random first tile
 		#if Globals.turns == 0:
 		tile = get_random_tile()
+		emit_signal("ai_selected_tile", tile)
 		tile_str = str(tile)	
 		previous_tile = tile
 		
@@ -309,12 +311,14 @@ func _on_World_world_prob_array_created(value):
 				print("Exploiting current highest cell: " + str(current_highest_cell) + " (prob " + str(current_highest_prob) + ")")
 				
 				tile = current_highest_cell
+				emit_signal("ai_selected_tile", tile)
 				
 			else:
 				# Explore
 				# Choose random tile and go there
 				text_log.text = "Turn " + str(Globals.turns) + ": Explore!\n" +  text_log.text
 				tile = get_random_tile()
+				emit_signal("ai_selected_tile", tile)
 				tile_str = str(tile_vec)
 			
 			if Globals.turns > 0 and previous_tile == tile:

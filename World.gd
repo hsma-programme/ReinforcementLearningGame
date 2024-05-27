@@ -56,6 +56,7 @@ func _ready():
 	gradient_texture.width = 200
 	
 	gradientScaleRect.texture = gradient_texture
+	gradientScaleRect.modulate = Color(0.8, 1.0, 0.8, 0.85)
 	
 	var margin_left = 0
 	var margin_top = 0
