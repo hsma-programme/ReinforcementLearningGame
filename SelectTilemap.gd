@@ -59,13 +59,19 @@ func _on_Player_ai_selected_tile(current_tile):
 	for x in range(GridXStart, GridXStart + GridSizeX, 1):
 		for y in range(GridYStart, GridYStart + GridSizeY, 1):
 			#set_cell(x, y, 0)
-			print(current_tile)
-			print(Vector2(x,y))
+			#print(current_tile)
+			#print(Vector2(x,y))
 			if Vector2(x-GridXStart, y-GridYStart) == current_tile:
 				set_cell(x, y, 1)
 				print("Bingo!")
 			else:
 				set_cell(x, y, 0)
+	
+	yield(get_tree().create_timer(0.2), "timeout")
+	
+	for x in range(GridXStart, GridXStart + GridSizeX, 1):
+		for y in range(GridYStart, GridYStart + GridSizeY, 1):
+			set_cell(x, y, 0)
 	
 	# For selected tile, set the
 	# TileSelect outline to visible 
