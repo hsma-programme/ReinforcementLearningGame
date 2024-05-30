@@ -241,6 +241,7 @@ text = "0   0.2  0.4  0.6  0.8   1"
 [connection signal="tile_in_diggable_limits" from="SelectTilemap" to="Player" method="_on_SelectTilemap_tile_in_diggable_limits"]
 [connection signal="formatted_tile_label_signal" from="LabelControl" to="Player" method="_on_LabelControl_formatted_tile_label_signal"]
 [connection signal="ai_selected_tile" from="Player" to="SelectTilemap" method="_on_Player_ai_selected_tile"]
+[connection signal="exploit_explore" from="Player" to="SelectTilemap" method="_on_Player_exploit_explore"]
 [connection signal="probabilities_updated" from="Player" to="." method="_on_Player_probabilities_updated"]
 [connection signal="treasure_found" from="Player" to="LabelControl" method="_on_Player_treasure_found"]
 [connection signal="turn_taken" from="Player" to="TurnUI" method="_on_Player_turn_taken"]

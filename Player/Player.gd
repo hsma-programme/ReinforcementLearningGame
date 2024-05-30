@@ -37,10 +37,13 @@ var state = "idle"
 var velocity = Vector2.ZERO
 var destination = Vector2.ZERO
 
+
+
 signal treasure_found
 signal turn_taken
 signal probabilities_updated
 signal ai_selected_tile
+signal exploit_explore
 
 var found_popup_scene = preload("res://Popups/YouFoundPopup.tscn")
 
@@ -292,8 +295,15 @@ func _on_World_world_prob_array_created(value):
 
 			if exploit_or_explore < Globals.agent_exploitation_rate:
 				# Exploit
+				emit_signal("exploit_explore", "Exploit!")
 				# Find highest rate and go there
-				text_log.text = "Turn " + str(Globals.turns) + ": Exploit!\n" +  text_log.text
+				#text_log.text = "Turn " + str(Globals.turns) + ": Exploit!\n" +  text_log.text
+				#tile_select_label.visible = true
+				#tile_select_label.text = "Exploit!"
+				#yield(get_tree().create_timer(0.3), "timeout")
+				#tile_select_label.visible = false
+				
+				
 				
 				var current_highest_cell = Vector2.ZERO
 				var current_highest_prob = 0.0
@@ -316,7 +326,8 @@ func _on_World_world_prob_array_created(value):
 			else:
 				# Explore
 				# Choose random tile and go there
-				text_log.text = "Turn " + str(Globals.turns) + ": Explore!\n" +  text_log.text
+				emit_signal("exploit_explore", "Explore!")
+				#text_log.text = "Turn " + str(Globals.turns) + ": Explore!\n" +  text_log.text
 				tile = get_random_tile()
 				emit_signal("ai_selected_tile", tile)
 				tile_str = str(tile_vec)

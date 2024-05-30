@@ -10,6 +10,10 @@ var TileRangeDic = {}
 signal current_tile_signal(current_tile)
 signal tile_in_diggable_limits(value)
 
+var exploit_explore_label = ""
+
+onready var tile_select_label = $"../LabelControl/TileSelectLabel"
+
 var current_tile = Vector2.ZERO setget update_selected_tile
 
 func update_selected_tile(value):
@@ -56,6 +60,12 @@ func _process(delta):
 
 
 func _on_Player_ai_selected_tile(current_tile):
+	# Flash up exploit/explore label
+	tile_select_label.visible = true
+	tile_select_label.text = exploit_explore_label
+	
+	# change tile to orange border if it's the cell the AI
+	# has selected
 	for x in range(GridXStart, GridXStart + GridSizeX, 1):
 		for y in range(GridYStart, GridYStart + GridSizeY, 1):
 			#set_cell(x, y, 0)
@@ -63,15 +73,23 @@ func _on_Player_ai_selected_tile(current_tile):
 			#print(Vector2(x,y))
 			if Vector2(x-GridXStart, y-GridYStart) == current_tile:
 				set_cell(x, y, 1)
-				print("Bingo!")
+				#print("Bingo!")
 			else:
+				# otherwise set cell to have no orange border
 				set_cell(x, y, 0)
 	
+	# Timer for keeping label and border on screen
 	yield(get_tree().create_timer(0.2), "timeout")
 	
+	# get rid of border
 	for x in range(GridXStart, GridXStart + GridSizeX, 1):
 		for y in range(GridYStart, GridYStart + GridSizeY, 1):
 			set_cell(x, y, 0)
+	
+	# keep label for a bit longer.
+	yield(get_tree().create_timer(0.2), "timeout")	
+	if Globals.play_speed != 5:
+		tile_select_label.visible = false
 	
 	# For selected tile, set the
 	# TileSelect outline to visible 
@@ -79,3 +97,7 @@ func _on_Player_ai_selected_tile(current_tile):
 	#set_cell(current_tile[0]+GridXStart, current_tile[1]+GridYStart, 1)
 	#print(current_tile[0]+GridXStart)
 	#print(current_tile[1]+GridYStart)
+
+
+func _on_Player_exploit_explore(value):
+	exploit_explore_label = value
