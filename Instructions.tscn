@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Instructions.gd" type="Script" id=1]
 [ext_resource path="res://TitleScreenTempBGBlack.jpg" type="Texture" id=2]
 [ext_resource path="res://Themes/buttons_v2.tres" type="Theme" id=3]
+[ext_resource path="res://UI/ReturnToHomeButton.tscn" type="PackedScene" id=4]
 
 [sub_resource type="DynamicFontData" id=1]
 font_path = "res://Fonts/8-bit-operator/8bitOperatorPlus-Bold.ttf"
@@ -59,4 +60,14 @@ Good luck!
 
 "
 
+[node name="ReturnToHomeButton" parent="." instance=ExtResource( 4 )]
+
+[node name="CheckBox" type="CheckBox" parent="."]
+margin_left = 376.0
+margin_top = 264.0
+margin_right = 445.0
+margin_bottom = 288.0
+text = "Debug"
+
 [connection signal="button_down" from="Button" to="." method="_on_Button_button_down"]
+[connection signal="toggled" from="CheckBox" to="." method="_on_CheckBox_toggled"]

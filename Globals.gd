@@ -11,6 +11,8 @@ var play_mode = "none"
 
 var agent_exploitation_rate = 0.9
 
+var debug_mode = false
+
 # the beta parameter for the linear operator learning rule - how much emphasis
 # will be put on the new sample vs the historic estimate of this cell.
 # learning rate = 1 would lead to only the newest sample being used (so

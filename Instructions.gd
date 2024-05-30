@@ -18,3 +18,12 @@ func _on_LearningRate_value_changed(value):
 
 func _on_PlaySpeed_value_changed(value):
 	Globals.play_speed = value
+
+func _on_CheckBox_toggled(button_pressed):
+	if Globals.debug_mode:
+		Globals.debug_mode = false
+		print(Globals.debug_mode)
+	else: 
+		Globals.debug_mode = true
+		print(Globals.debug_mode)
+	
