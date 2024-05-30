@@ -130,12 +130,10 @@ func _on_Player_probabilities_updated(tile):
 		new_font.font_data = load("res://Fonts/8-bit-operator/8bitOperatorPlus8-Regular.ttf")
 		new_font.size = 6
 		
-		
-		
 		#self.get_children().queue_free()
 			
 		for cell in world_prob_array.keys():
-			
+			# Remove existing displayed prob label
 			var existing = get_tree().get_root().find_node("*X*"+(str(cell))+"*", true, false)
 			
 			var lab = Label.new()
