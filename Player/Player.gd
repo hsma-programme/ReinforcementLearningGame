@@ -211,6 +211,7 @@ func update_probabilities_with_lr():
 													((1.0-Globals.agent_learning_rate) *
 													 prev_estimate)
 													)
+	print("Updated prob calculated as " + str(Globals.agent_learning_rate) + " * " + str(Globals.last_found_state) + " + ((1 - " + str(Globals.agent_learning_rate) + ") * " + str(prev_estimate)  + ")")
 	
 	world_array.get(str(tile))['Prob_Observed'] = world_array.get(str(tile))['Prob_Estimate']
 	
@@ -238,10 +239,12 @@ func digging_outcome(popup_label="none", popup="none", popup_timer="none"):
 	if rand_float < world_array.get(str(tile))['Prob']:
 		on_treasure_found(popup_label, popup, popup_timer, tile)
 		Globals.last_found_state = 1
+		print("Treasure Found: Last found state set to 1")
 		return true
 	else:
 		on_treasure_not_found(tile)
 		Globals.last_found_state = 0
+		print("Treasure NOT Found: Last found state set to 0")
 		return false
 
 func get_random_tile():
