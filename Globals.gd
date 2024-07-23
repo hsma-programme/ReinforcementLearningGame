@@ -7,6 +7,8 @@ var treasure_count = 0
 var times_moved = 0
 var times_dug = 0
 
+var last_found_state = 0
+
 var play_mode = "none"
 
 var agent_exploitation_rate = 0.9
