@@ -248,4 +248,5 @@ text = "0   0.2  0.4  0.6  0.8   1"
 [connection signal="button_down" from="DebugButton" to="." method="_on_DebugButton_button_down"]
 [connection signal="button_down" from="ReturnToHomeButton" to="Player" method="_on_ReturnToHomeButton_button_down"]
 
+[editable path="TurnUI"]
 [editable path="ReturnToHomeButton"]

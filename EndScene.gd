@@ -33,8 +33,8 @@ func _ready():
 	var margin_top = 0
 	
 	var new_font: DynamicFont = DynamicFont.new()
-	new_font.font_data = load("res://Fonts/8-bit-operator/8bitOperatorPlus8-Regular.ttf")
-	new_font.size = 6
+	new_font.font_data = load("res://Fonts/8-bit-operator/8bitOperatorPlus-Regular.ttf")
+	new_font.size = 5
 		
 	for cell in world_prob_array.keys():
 		var x = ColorRect.new()
@@ -48,10 +48,10 @@ func _ready():
 		lab.rect_size = Vector2(cell_size*.9,cell_size*.9)
 		if world_prob_array.get(str(cell))['Times_Dug'] == 0.0:
 			if Globals.play_mode == "manual":
-				lab.text = "Not\nExplored!" + "\n\nActual:" +  str(world_prob_array.get(str(cell))['Prob']) + "\n"
+				lab.text = "Not Explored!" + "\n\nActual:" +  str(world_prob_array.get(str(cell))['Prob']) + "\n"
 				x.color = Color(0, .5, 0, 0.25)
 			else:
-				lab.text = "Not\nExplored!\n\n" + observed_estimated_label + str(stepify(world_prob_array.get(str(cell))['Prob_Estimate'],0.01)) + "\n\nActual:" +  str(world_prob_array.get(str(cell))['Prob']) + "\n"
+				lab.text = "Not Explored!\n\n" + observed_estimated_label + str(stepify(world_prob_array.get(str(cell))['Prob_Estimate'],0.01)) + "\n\nActual:" +  str(world_prob_array.get(str(cell))['Prob']) + "\n"
 				x.color = Color(0, .5, 0, 0.25)
 		else:
 			lab.text = observed_estimated_label + str(stepify(world_prob_array.get(str(cell))['Prob_Observed'],0.01)) + "\n\nActual: " +  str(world_prob_array.get(str(cell))['Prob']) + "\n\nTimes Dug: " + str(world_prob_array.get(str(cell))['Times_Dug'])
